@@ -58,7 +58,7 @@ def main():
         with col9:
             SB = st.number_input("**SB**", value=0)
         with col10:
-            AVG = st.number_input("**AVG**", value=0.0)
+            AVG = st.number_input("**AVG**", value=.000)
     with st.container():
         col1, col2 = st.columns([1,10])
         with col1:
@@ -78,7 +78,7 @@ def main():
         with col3:
             pitcher_year = st.text_input("**Pitcher Year**")
         with col4:
-            ERA = st.number_input("**ERA**", value=0.0)
+            ERA = st.number_input("**ERA**", value=0.00)
         with col5:
             G = st.number_input("**G**", value=0)
         with col6:
