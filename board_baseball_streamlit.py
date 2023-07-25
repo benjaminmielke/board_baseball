@@ -46,19 +46,19 @@ def main():
         with col3:
             hitter_year = st.text_input("**Hitter Year**")
         with col4:
-            H = st.number_input("**H**", value=0)
+            H = st.number_input("**H**", value="")
         with col5:
-            Double = st.number_input("**2B**", value=0)
+            Double = st.number_input("**2B**", value="")
         with col6:
-            Triple = st.number_input("**3B**", value=0)
+            Triple = st.number_input("**3B**", value="")
         with col7:
-            HR = st.number_input("**HR**", value=0)
+            HR = st.number_input("**HR**", value="")
         with col8:
-            BB_H = st.number_input("**Hitter BB**", value=0)
+            BB_H = st.number_input("**Hitter BB**", value="")
         with col9:
-            SB = st.number_input("**SB**", value=0)
+            SB = st.number_input("**SB**", value="")
         with col10:
-            AVG = st.number_input("**AVG**", value=.000)
+            AVG = st.number_input("**AVG**", value="")
     with st.container():
         col1, col2 = st.columns([1,10])
         with col1:
@@ -78,15 +78,15 @@ def main():
         with col3:
             pitcher_year = st.text_input("**Pitcher Year**")
         with col4:
-            ERA = st.number_input("**ERA**", value=0.00)
+            ERA = st.number_input("**ERA**", value="")
         with col5:
-            G = st.number_input("**G**", value=0)
+            G = st.number_input("**G**", value="")
         with col6:
-            IP = st.number_input("**IP**", value=0)
+            IP = st.number_input("**IP**", value="")
         with col7:
-            SO = st.number_input("**SO**", value=0)
+            SO = st.number_input("**SO**", value="")
         with col8:
-            BB_P = st.number_input("**Pitcher BB**", value=0)
+            BB_P = st.number_input("**Pitcher BB**", value="")
     with st.container():
         col1, col2 = st.columns([1,10])
         with col1:
