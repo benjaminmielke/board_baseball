@@ -49,7 +49,7 @@ def main():
         with col3:
             hitter_year = st.text_input("**Hitter Year**")
         with col4:
-            H = st.number_input("**H**", value=NULL)
+            H = st.number_input("**H**", value=0, format="{:,.3f}")
         with col5:
             Double = st.number_input("**2B**", value=0)
         with col6:
