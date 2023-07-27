@@ -16,7 +16,7 @@ def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Doubl
 
 # Function to calculate Pitcher metrics
 def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA, G, IP, SO, BB_P):
-    pitcher_decrease = math.floor(float(ERA) * 10) + 10
+    pitcher_decrease = -(math.floor(float(ERA) * 10)) + 20
     pitcher_dice_row = math.floor(int(SO) / int(BB_P))
     endurance = math.ceil(int(IP) / int(G))
 
@@ -41,8 +41,11 @@ def main():
         col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([1, 1, 1, 1 , 1, 1, 1, 1, 1, 1])
         with col1:
             hitter_name = st.text_input("**Hitter Name**")
+        #with col2:
+        #    hitter_position = st.text_input("**Hitter Position**")
         with col2:
-            hitter_position = st.text_input("**Hitter Position**")
+            options = ["C", "1B", "2B", "3B", "SS", "OF", "DH"]
+            st.selectbox("**Hitter Position**", options)
         with col3:
             hitter_year = st.text_input("**Hitter Year**")
         with col4:
