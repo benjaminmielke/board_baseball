@@ -2,40 +2,12 @@ import streamlit as st
 import pandas as pd
 from pybaseball import batting_stats, pitching_stats
 
-# Function to fetch all years from 2000 onwards
-def get_years():
-    years = set()
-
-    try:
-        # Fetch stats for a range of years from 2000 to 2023
-        for year in range(2000, 2024):
-            # Fetch batting stats for the year
-            batting = batting_stats(year)
-            # Fetch pitching stats for the year
-            pitching = pitching_stats(year)
-
-            # Check columns for batting stats
-            if batting is not None:
-                # Update years based on available data
-                years.update(batting['Season'].unique().tolist())
-
-            # Check columns for pitching stats
-            if pitching is not None:
-                # Update years based on available data
-                years.update(pitching['Season'].unique().tolist())
-
-    except Exception as e:
-        st.error(f"Error fetching data: {e}")
-
-    # Return years in sorted order
-    return sorted(list(years))
-
-# Function to fetch player stats for all years (2000 - 2023)
+# Function to fetch player stats for the years 2021 to 2024
 def get_player_stats():
     all_stats = pd.DataFrame()
 
-    # Fetch stats for a range of years from 2000 to 2023
-    for year in range(2000, 2024):
+    # Fetch stats for a specific range of years (2021 to 2024)
+    for year in range(2021, 2024):  # Adjusted year range to 2021-2024
         try:
             # Fetch batting stats
             batting = batting_stats(year)
@@ -96,14 +68,7 @@ def main():
     # Streamlit user interface
     st.title("Baseball Player Stats Viewer")
 
-    # Get the available years from 2000 to 2023
-    years = get_years()
-
-    if not years:
-        st.write("No data found for the selected range.")
-        return
-
-    # Fetch and display the player stats for all years (2000 - 2023)
+    # Fetch and display the player stats for years 2021-2024
     all_stats_df = get_player_stats()
 
     if not all_stats_df.empty:
@@ -112,7 +77,7 @@ def main():
         st.write(f"Number of rows in the dataset: {num_rows}")
         
         # Display the dataframe itself
-        st.write("Player Stats from 2000 to 2023:")
+        st.write("Player Stats from 2021 to 2024:")
         st.dataframe(all_stats_df)
     else:
         st.write("No stats available for the selected years.")
