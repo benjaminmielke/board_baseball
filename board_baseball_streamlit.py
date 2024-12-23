@@ -12,22 +12,16 @@ def get_players_and_years(player_type):
         for year in range(1985, 2024):
             if player_type == "Hitter":
                 batting = batting_stats(year)
-                # Check available columns in batting stats
-                st.write(f"Batting stats columns for {year}: {batting.columns}")
-                if 'playerID' in batting.columns:
-                    players += batting['playerID'].unique().tolist()
-                    years.update(batting['year'].unique().tolist())
-                else:
-                    st.write(f"Warning: 'playerID' not found in batting stats for {year}. Available columns: {batting.columns}")
+                if 'playerID' not in batting.columns:
+                    st.write(f"Warning: 'playerID' not found in batting stats for {year}. Columns available: {batting.columns}")
+                players += batting['playerID'].unique().tolist() if 'playerID' in batting.columns else []
+                years.update(batting['year'].unique().tolist())  # Check if 'year' exists
             elif player_type == "Pitcher":
                 pitching = pitching_stats(year)
-                # Check available columns in pitching stats
-                st.write(f"Pitching stats columns for {year}: {pitching.columns}")
-                if 'playerID' in pitching.columns:
-                    players += pitching['playerID'].unique().tolist()
-                    years.update(pitching['year'].unique().tolist())
-                else:
-                    st.write(f"Warning: 'playerID' not found in pitching stats for {year}. Available columns: {pitching.columns}")
+                if 'playerID' not in pitching.columns:
+                    st.write(f"Warning: 'playerID' not found in pitching stats for {year}. Columns available: {pitching.columns}")
+                players += pitching['playerID'].unique().tolist() if 'playerID' in pitching.columns else []
+                years.update(pitching['year'].unique().tolist())  # Check if 'year' exists
     except Exception as e:
         st.error(f"Error fetching data: {e}")
     
@@ -65,15 +59,12 @@ def get_player_stats(player_name, player_type, year):
     try:
         if player_type == "Hitter":
             batting = batting_stats(year)
-            # Check if 'playerID' exists
-            if 'playerID' in batting.columns:
-                player_batting_stats = batting[batting['playerID'] == player_id]
-                player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
-                player_batting_stats['player_type'] = 'Hitter'
-                return player_batting_stats
-            else:
-                st.error(f"'playerID' column not found in batting stats for {year}. Available columns: {batting.columns}")
-                return pd.DataFrame()
+            if 'playerID' not in batting.columns:
+                st.write(f"Warning: 'playerID' not found in batting stats for {year}. Columns available: {batting.columns}")
+            player_batting_stats = batting[batting['playerID'] == player_id] if 'playerID' in batting.columns else pd.DataFrame()
+            player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']] if not player_batting_stats.empty else pd.DataFrame()
+            player_batting_stats['player_type'] = 'Hitter'
+            return player_batting_stats
     except Exception as e:
         st.error(f"Error fetching batting stats for {year}: {e}")
 
@@ -81,15 +72,12 @@ def get_player_stats(player_name, player_type, year):
     try:
         if player_type == "Pitcher":
             pitching = pitching_stats(year)
-            # Check if 'playerID' exists
-            if 'playerID' in pitching.columns:
-                player_pitching_stats = pitching[pitching['playerID'] == player_id]
-                player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']]
-                player_pitching_stats['player_type'] = 'Pitcher'
-                return player_pitching_stats
-            else:
-                st.error(f"'playerID' column not found in pitching stats for {year}. Available columns: {pitching.columns}")
-                return pd.DataFrame()
+            if 'playerID' not in pitching.columns:
+                st.write(f"Warning: 'playerID' not found in pitching stats for {year}. Columns available: {pitching.columns}")
+            player_pitching_stats = pitching[pitching['playerID'] == player_id] if 'playerID' in pitching.columns else pd.DataFrame()
+            player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']] if not player_pitching_stats.empty else pd.DataFrame()
+            player_pitching_stats['player_type'] = 'Pitcher'
+            return player_pitching_stats
     except Exception as e:
         st.error(f"Error fetching pitching stats for {year}: {e}")
 
