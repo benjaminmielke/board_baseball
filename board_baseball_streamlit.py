@@ -2,34 +2,34 @@ import streamlit as st
 import pandas as pd
 from pybaseball import playerid_lookup, batting_stats, pitching_stats
 
-# Function to fetch players based on their type (Hitter or Pitcher) and available years
-def get_players_and_years(player_type):
+# Function to fetch all players and years from 2000 onwards
+def get_players_and_years():
     players = []
-    years = set()  # To store unique years for the selected player type
+    years = set()
 
-    # Fetch stats for a range of years from 1985 to 2023
     try:
-        for year in range(1985, 2024):
-            if player_type == "Hitter":
-                batting = batting_stats(year)
-                if 'playerID' not in batting.columns:
-                    st.write(f"Warning: 'playerID' not found in batting stats for {year}. Columns available: {batting.columns}")
-                players += batting['playerID'].unique().tolist() if 'playerID' in batting.columns else []
-                years.update(batting['year'].unique().tolist())  # Check if 'year' exists
-            elif player_type == "Pitcher":
-                pitching = pitching_stats(year)
-                if 'playerID' not in pitching.columns:
-                    st.write(f"Warning: 'playerID' not found in pitching stats for {year}. Columns available: {pitching.columns}")
-                players += pitching['playerID'].unique().tolist() if 'playerID' in pitching.columns else []
-                years.update(pitching['year'].unique().tolist())  # Check if 'year' exists
+        # Fetch stats for a range of years from 2000 to 2023
+        for year in range(2000, 2024):
+            batting = batting_stats(year)
+            pitching = pitching_stats(year)
+
+            # Collect all playerIDs from both batting and pitching data
+            if 'playerID' in batting.columns:
+                players += batting['playerID'].unique().tolist()
+            if 'playerID' in pitching.columns:
+                players += pitching['playerID'].unique().tolist()
+
+            # Collect all available years
+            years.update(batting['year'].unique().tolist())
+            years.update(pitching['year'].unique().tolist())
     except Exception as e:
         st.error(f"Error fetching data: {e}")
-    
-    # Remove duplicates
+
+    # Remove duplicates and sort
     players = list(set(players))
     years = sorted(list(years))
 
-    # Get player names for those IDs
+    # Get player names based on playerIDs
     player_names = []
     for player_id in players:
         try:
@@ -38,11 +38,11 @@ def get_players_and_years(player_type):
                 player_names.append(player_data['name_full'].iloc[0])
         except:
             continue
-    
+
     return sorted(player_names), years
 
 # Function to get the player's stats for the selected year
-def get_player_stats(player_name, player_type, year):
+def get_player_stats(player_name, year):
     # Search for the player by name using playerid_lookup
     player_data = playerid_lookup(player_name)
 
@@ -57,27 +57,25 @@ def get_player_stats(player_name, player_type, year):
 
     # Fetch batting stats for the specific year (if available)
     try:
-        if player_type == "Hitter":
-            batting = batting_stats(year)
-            if 'playerID' not in batting.columns:
-                st.write(f"Warning: 'playerID' not found in batting stats for {year}. Columns available: {batting.columns}")
-            player_batting_stats = batting[batting['playerID'] == player_id] if 'playerID' in batting.columns else pd.DataFrame()
-            player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']] if not player_batting_stats.empty else pd.DataFrame()
-            player_batting_stats['player_type'] = 'Hitter'
-            return player_batting_stats
+        batting = batting_stats(year)
+        if 'playerID' in batting.columns:
+            player_batting_stats = batting[batting['playerID'] == player_id]
+            if not player_batting_stats.empty:
+                player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
+                player_batting_stats['player_type'] = 'Hitter'
+                return player_batting_stats
     except Exception as e:
         st.error(f"Error fetching batting stats for {year}: {e}")
 
     # Fetch pitching stats for the specific year (if available)
     try:
-        if player_type == "Pitcher":
-            pitching = pitching_stats(year)
-            if 'playerID' not in pitching.columns:
-                st.write(f"Warning: 'playerID' not found in pitching stats for {year}. Columns available: {pitching.columns}")
-            player_pitching_stats = pitching[pitching['playerID'] == player_id] if 'playerID' in pitching.columns else pd.DataFrame()
-            player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']] if not player_pitching_stats.empty else pd.DataFrame()
-            player_pitching_stats['player_type'] = 'Pitcher'
-            return player_pitching_stats
+        pitching = pitching_stats(year)
+        if 'playerID' in pitching.columns:
+            player_pitching_stats = pitching[pitching['playerID'] == player_id]
+            if not player_pitching_stats.empty:
+                player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']]
+                player_pitching_stats['player_type'] = 'Pitcher'
+                return player_pitching_stats
     except Exception as e:
         st.error(f"Error fetching pitching stats for {year}: {e}")
 
@@ -87,14 +85,11 @@ def main():
     # Streamlit user interface
     st.title("Baseball Player Stats Viewer")
 
-    # Select whether the player is a hitter or pitcher
-    player_type = st.selectbox("Select Player Type", ["Hitter", "Pitcher"])
-
     # Get the list of players and years based on the selected type
-    players, years = get_players_and_years(player_type)
+    players, years = get_players_and_years()
 
     if not players:
-        st.write("No players found for the selected type.")
+        st.write("No players found for the selected range.")
         return
 
     # Dropdown for selecting a player
@@ -106,12 +101,12 @@ def main():
     # Button to fetch and display player stats for the selected year
     if st.button("Get Player Stats"):
         if player_name and year:
-            # Fetch player stats for the selected year and player type
-            player_stats_df = get_player_stats(player_name, player_type, year)
+            # Fetch player stats for the selected year
+            player_stats_df = get_player_stats(player_name, year)
 
             # Display player stats if available
             if not player_stats_df.empty:
-                st.write(f"Stats for {player_name} ({player_type}) in {year}")
+                st.write(f"Stats for {player_name} in {year}")
                 st.dataframe(player_stats_df)
             else:
                 st.write(f"No data available for {player_name} in {year}.")
