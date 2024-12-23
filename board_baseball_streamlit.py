@@ -10,18 +10,24 @@ def get_players_and_years():
     try:
         # Fetch stats for a range of years from 2000 to 2023
         for year in range(2000, 2024):
+            # Fetch batting stats for the year
             batting = batting_stats(year)
+            # Fetch pitching stats for the year
             pitching = pitching_stats(year)
 
-            # Collect all playerIDs from both batting and pitching data
-            if 'playerID' in batting.columns:
+            # Inspect columns to understand the data structure
+            if batting is not None and 'playerID' in batting.columns:
                 players += batting['playerID'].unique().tolist()
-            if 'playerID' in pitching.columns:
-                players += pitching['playerID'].unique().tolist()
+                years.update(batting['year'].unique().tolist())  # Check if 'year' exists
+            else:
+                st.warning(f"No 'playerID' column found in batting stats for {year}. Columns: {batting.columns if batting is not None else 'None'}")
 
-            # Collect all available years
-            years.update(batting['year'].unique().tolist())
-            years.update(pitching['year'].unique().tolist())
+            if pitching is not None and 'playerID' in pitching.columns:
+                players += pitching['playerID'].unique().tolist()
+                years.update(pitching['year'].unique().tolist())  # Check if 'year' exists
+            else:
+                st.warning(f"No 'playerID' column found in pitching stats for {year}. Columns: {pitching.columns if pitching is not None else 'None'}")
+
     except Exception as e:
         st.error(f"Error fetching data: {e}")
 
@@ -58,7 +64,7 @@ def get_player_stats(player_name, year):
     # Fetch batting stats for the specific year (if available)
     try:
         batting = batting_stats(year)
-        if 'playerID' in batting.columns:
+        if batting is not None and 'playerID' in batting.columns:
             player_batting_stats = batting[batting['playerID'] == player_id]
             if not player_batting_stats.empty:
                 player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
@@ -70,7 +76,7 @@ def get_player_stats(player_name, year):
     # Fetch pitching stats for the specific year (if available)
     try:
         pitching = pitching_stats(year)
-        if 'playerID' in pitching.columns:
+        if pitching is not None and 'playerID' in pitching.columns:
             player_pitching_stats = pitching[pitching['playerID'] == player_id]
             if not player_pitching_stats.empty:
                 player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']]
