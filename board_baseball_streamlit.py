@@ -14,26 +14,26 @@ def get_player_stats():
             # Fetch pitching stats for the given year
             pitching = pitching_stats(year)
 
-            # Debug: Show the first few rows of batting and pitching data for a specific year
-            st.write(f"Batting stats for {year}:")
-            st.write(batting.head())  # Show the first few rows of batting data
-            st.write(f"Pitching stats for {year}:")
-            st.write(pitching.head())  # Show the first few rows of pitching data
-
             # If we have valid data for batting stats
             if batting is not None and 'playerID' in batting.columns:
-                all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
+                # Adjust the year column to 'Season' and filter for desired columns
+                batting['Season'] = year
+                batting_filtered = batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'Season']]
+                all_stats = pd.concat([all_stats, batting_filtered])
 
             # If we have valid data for pitching stats
             if pitching is not None and 'playerID' in pitching.columns:
-                all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'year']]])
+                # Adjust the year column to 'Season' and filter for desired columns
+                pitching['Season'] = year
+                pitching_filtered = pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'Season']]
+                all_stats = pd.concat([all_stats, pitching_filtered])
 
         except Exception as e:
             st.error(f"Error fetching stats for {year}: {e}")
     
-    # Convert 'year' column from float to int
-    if 'year' in all_stats.columns:
-        all_stats['year'] = all_stats['year'].astype(int)
+    # Convert 'Season' column from float to int
+    if 'Season' in all_stats.columns:
+        all_stats['Season'] = all_stats['Season'].astype(int)
 
     return all_stats
 
