@@ -1,9 +1,9 @@
-import streamlit as st
+ import streamlit as st
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-# Function to fetch player stats from Baseball Reference
+# Function to fetch player stats from Baseball Reference for a single year
 def fetch_stats(year):
     # URLs for batting and pitching stats on Baseball Reference
     url_batting = f"https://www.baseball-reference.com/leagues/MLB/{year}-standard-batting.shtml"
@@ -74,26 +74,22 @@ def fetch_stats(year):
         st.error(f"Error fetching stats for {year}: {e}")
         return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
-# Function to fetch all player stats for the years 2021 to 2024
+# Function to fetch all player stats for the 2022 season
 def get_player_stats():
-    all_stats = pd.DataFrame()
-
-    # Fetch stats for a specific range of years (2021 to 2024)
-    for year in range(2021, 2025):  # Adjusted year range to 2021-2024
-        stats_df = fetch_stats(year)
-        if not stats_df.empty:
-            all_stats = pd.concat([all_stats, stats_df], ignore_index=True)
-
-    # Clean up the final DataFrame (if needed)
-    all_stats = all_stats.dropna(subset=['Player'])  # Drop rows where 'Player' is missing
-
-    return all_stats
+    # Only fetch stats for 2022 (to speed up)
+    year = 2022
+    stats_df = fetch_stats(year)
+    
+    if not stats_df.empty:
+        return stats_df
+    else:
+        return pd.DataFrame()  # Return empty DataFrame if no data is fetched
 
 def main():
     # Streamlit user interface
-    st.title("MLB Player Stats Viewer (2021-2024)")
+    st.title("MLB Player Stats Viewer (2022)")
 
-    # Fetch and display the player stats for years 2021-2024
+    # Fetch and display the player stats for 2022
     all_stats_df = get_player_stats()
 
     if not all_stats_df.empty:
@@ -105,7 +101,7 @@ def main():
         st.write("First few rows of the dataset:")
         st.dataframe(all_stats_df.head())  # Display only the first few rows of the final dataframe
     else:
-        st.write("No stats available for the selected years.")
+        st.write("No stats available for the selected year.")
 
 if __name__ == "__main__":
     main()
