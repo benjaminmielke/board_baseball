@@ -35,89 +35,54 @@ def get_players_and_years():
     players = list(set(players))
     years = sorted(list(years))
 
-    # Get player names based on playerIDs
-    player_names = []
-    for player_id in players:
+    return years
+
+# Function to fetch stats for the top 10 players and display them
+def get_top_10_player_stats(years):
+    all_stats = pd.DataFrame()
+
+    # Fetch stats for a range of years from 2000 to 2023
+    for year in range(2000, 2024):
         try:
-            player_data = playerid_lookup(player_id)
-            if not player_data.empty:
-                player_names.append(player_data['name_full'].iloc[0])
-        except:
-            continue
+            batting = batting_stats(year)
+            pitching = pitching_stats(year)
 
-    return sorted(player_names), years
+            # If we have valid data for both batting and pitching stats
+            if batting is not None and 'playerID' in batting.columns:
+                batting['year'] = year
+                all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
 
-# Function to get the player's stats for the selected year
-def get_player_stats(player_name, year):
-    # Search for the player by name using playerid_lookup
-    player_data = playerid_lookup(player_name)
+            if pitching is not None and 'playerID' in pitching.columns:
+                pitching['year'] = year
+                all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'year']]])
 
-    # If no player found
-    if player_data.empty:
-        st.error(f"No player found with the name: {player_name}")
-        return pd.DataFrame()  # Return an empty DataFrame
+        except Exception as e:
+            st.error(f"Error fetching stats for {year}: {e}")
     
-    # Retrieve player ID (player's unique ID in the database)
-    player_id = player_data['key_bbref'].iloc[0]
-    st.write(f"Player found: {player_name} (BBREF ID: {player_id})")
+    # Show top 10 rows of the data
+    top_10_stats = all_stats.head(10)
 
-    # Fetch batting stats for the specific year (if available)
-    try:
-        batting = batting_stats(year)
-        if batting is not None and 'playerID' in batting.columns:
-            player_batting_stats = batting[batting['playerID'] == player_id]
-            if not player_batting_stats.empty:
-                player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
-                player_batting_stats['player_type'] = 'Hitter'
-                return player_batting_stats
-    except Exception as e:
-        st.error(f"Error fetching batting stats for {year}: {e}")
-
-    # Fetch pitching stats for the specific year (if available)
-    try:
-        pitching = pitching_stats(year)
-        if pitching is not None and 'playerID' in pitching.columns:
-            player_pitching_stats = pitching[pitching['playerID'] == player_id]
-            if not player_pitching_stats.empty:
-                player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']]
-                player_pitching_stats['player_type'] = 'Pitcher'
-                return player_pitching_stats
-    except Exception as e:
-        st.error(f"Error fetching pitching stats for {year}: {e}")
-
-    return pd.DataFrame()  # Return empty DataFrame if no data found
+    return top_10_stats
 
 def main():
     # Streamlit user interface
     st.title("Baseball Player Stats Viewer")
 
-    # Get the list of players and years based on the selected type
-    players, years = get_players_and_years()
+    # Get the available years from 2000 to 2023
+    years = get_players_and_years()
 
-    if not players:
-        st.write("No players found for the selected range.")
+    if not years:
+        st.write("No data found for the selected range.")
         return
 
-    # Dropdown for selecting a player
-    player_name = st.selectbox("Select Player", players)
+    # Fetch and display the top 10 player stats
+    top_10_stats_df = get_top_10_player_stats(years)
 
-    # Dropdown for selecting a year based on the player selected
-    year = st.selectbox("Select Year", years)
-
-    # Button to fetch and display player stats for the selected year
-    if st.button("Get Player Stats"):
-        if player_name and year:
-            # Fetch player stats for the selected year
-            player_stats_df = get_player_stats(player_name, year)
-
-            # Display player stats if available
-            if not player_stats_df.empty:
-                st.write(f"Stats for {player_name} in {year}")
-                st.dataframe(player_stats_df)
-            else:
-                st.write(f"No data available for {player_name} in {year}.")
-        else:
-            st.error("Please select a player's name and a year.")
+    if not top_10_stats_df.empty:
+        st.write("Top 10 Player Stats:")
+        st.dataframe(top_10_stats_df)
+    else:
+        st.write("No stats available for the selected years.")
 
 if __name__ == "__main__":
     main()
