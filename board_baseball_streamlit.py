@@ -5,72 +5,72 @@ from bs4 import BeautifulSoup
 
 # Function to fetch player stats from Baseball Reference
 def fetch_stats(year):
-    # URL to Baseball Reference stats page for each year
+    # URLs for batting and pitching stats on Baseball Reference
     url_batting = f"https://www.baseball-reference.com/leagues/MLB/{year}-standard-batting.shtml"
     url_pitching = f"https://www.baseball-reference.com/leagues/MLB/{year}-standard-pitching.shtml"
-
+    
     try:
         # Fetching batting stats
         response_batting = requests.get(url_batting)
         soup_batting = BeautifulSoup(response_batting.text, 'html.parser')
 
-        # Fetching the batting table
+        # Find the batting stats table
         batting_table = soup_batting.find('table', {'class': 'stats_table'})
 
         # Parse the table into a DataFrame
         batting_df = pd.read_html(str(batting_table))[0]
-
-        # Debug: Show columns for the batting DataFrame
+        
+        # Debugging: Show columns of the batting DataFrame
         st.write(f"Columns in Batting DataFrame for {year}:")
         st.write(batting_df.columns)
 
-        # Filter columns and clean up the data
+        # If 'Rk' exists in columns, proceed
         if 'Rk' in batting_df.columns:
-            # Ensure the correct columns for batting stats
+            # Clean up and select necessary columns for batting
             batting_df = batting_df[['Rk', 'Player', 'Age', 'G', 'AB', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
-
-            # Rename 'Player' to 'playerID' and 'BA' to 'batting_average'
+            
+            # Rename columns to match the desired format
             batting_df = batting_df.rename(columns={"Player": "playerID", "BA": "batting_average"})
             
-            # Add 'Season' column
+            # Add 'Season' column for the year
             batting_df['Season'] = year
 
-            # Clean up player names
-            batting_df['playerID'] = batting_df['playerID'].str.strip()  # Remove leading/trailing spaces
+            # Clean up player names (strip leading/trailing spaces)
+            batting_df['playerID'] = batting_df['playerID'].str.strip()
         else:
-            batting_df = pd.DataFrame()
+            batting_df = pd.DataFrame()  # Return empty DataFrame if no 'Rk' column
 
         # Fetching pitching stats
         response_pitching = requests.get(url_pitching)
         soup_pitching = BeautifulSoup(response_pitching.text, 'html.parser')
 
-        # Fetching the pitching table
+        # Find the pitching stats table
         pitching_table = soup_pitching.find('table', {'class': 'stats_table'})
 
         # Parse the table into a DataFrame
         pitching_df = pd.read_html(str(pitching_table))[0]
 
-        # Debug: Show columns for the pitching DataFrame
+        # Debugging: Show columns of the pitching DataFrame
         st.write(f"Columns in Pitching DataFrame for {year}:")
         st.write(pitching_df.columns)
 
-        # Filter columns and clean up the data
+        # If 'Rk' exists in columns, proceed
         if 'Rk' in pitching_df.columns:
-            # Ensure the correct columns for pitching stats
+            # Clean up and select necessary columns for pitching
             pitching_df = pitching_df[['Rk', 'Player', 'Age', 'G', 'IP', 'SO', 'BB', 'ERA']]
-            
-            # Add 'Season' column
+
+            # Add 'Season' column for the year
             pitching_df['Season'] = year
 
-            # Rename 'Player' to 'playerID' and 'ERA' to 'earned_run_avg'
+            # Rename columns for consistency
             pitching_df = pitching_df.rename(columns={"Player": "playerID", "ERA": "earned_run_avg"})
             
             # Clean up player names
-            pitching_df['playerID'] = pitching_df['playerID'].str.strip()  # Remove leading/trailing spaces
+            pitching_df['playerID'] = pitching_df['playerID'].str.strip()
         else:
-            pitching_df = pd.DataFrame()
+            pitching_df = pd.DataFrame()  # Return empty DataFrame if no 'Rk' column
 
-        # Combine both DataFrames (batting and pitching)
+        # Combine both batting and pitching dataframes
         combined_df = pd.concat([batting_df[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'batting_average', 'Season']],
                                  pitching_df[['playerID', 'G', 'IP', 'SO', 'BB', 'earned_run_avg', 'Season']]], ignore_index=True)
 
@@ -78,7 +78,7 @@ def fetch_stats(year):
 
     except Exception as e:
         st.error(f"Error fetching stats for {year}: {e}")
-        return pd.DataFrame()  # Return empty DataFrame on error
+        return pd.DataFrame()  # Return an empty DataFrame in case of an error
 
 # Function to fetch all player stats for the years 2021 to 2024
 def get_player_stats():
