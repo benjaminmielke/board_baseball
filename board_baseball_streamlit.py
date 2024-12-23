@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
-from pybaseball import player_search, batting_stats, pitching_stats
+from pybaseball import playerid_lookup, batting_stats, pitching_stats
 import time
 
 def get_player_stats(player_name, year):
-    # Search for the player by name
-    player_data = player_search(player_name)
+    # Search for the player by name using playerid_lookup
+    player_data = playerid_lookup(player_name)
 
     # If no player found
     if player_data.empty:
