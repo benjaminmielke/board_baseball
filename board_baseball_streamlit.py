@@ -24,7 +24,7 @@ def fetch_stats(year):
         st.write(f"Columns in Batting DataFrame for {year}:")
         st.write(batting_df.columns)
 
-        # Filter columns and clean up the data (we will need to adjust this based on actual columns)
+        # Filter columns and clean up the data
         if 'Rk' in batting_df.columns:
             batting_df = batting_df[['Rk', 'Player', 'Age', 'G', 'AB', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
             batting_df['Season'] = year
@@ -47,7 +47,7 @@ def fetch_stats(year):
         st.write(f"Columns in Pitching DataFrame for {year}:")
         st.write(pitching_df.columns)
 
-        # Filter columns and clean up the data (we will need to adjust this based on actual columns)
+        # Filter columns and clean up the data
         if 'Rk' in pitching_df.columns:
             pitching_df = pitching_df[['Rk', 'Player', 'Age', 'G', 'IP', 'SO', 'BB', 'ERA']]
             pitching_df['Season'] = year
@@ -56,7 +56,7 @@ def fetch_stats(year):
         else:
             pitching_df = pd.DataFrame()
 
-        # Combine both DataFrames
+        # Combine both DataFrames (batting and pitching)
         combined_df = pd.concat([batting_df[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'batting_average', 'Season']],
                                  pitching_df[['playerID', 'G', 'IP', 'SO', 'BB', 'earned_run_avg', 'Season']]], ignore_index=True)
 
@@ -83,7 +83,7 @@ def get_player_stats():
 
 def main():
     # Streamlit user interface
-    st.title("Baseball Player Stats Viewer")
+    st.title("MLB Player Stats Viewer (2021-2024)")
 
     # Fetch and display the player stats for years 2021-2024
     all_stats_df = get_player_stats()
