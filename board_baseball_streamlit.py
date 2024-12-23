@@ -46,17 +46,27 @@ def get_player_stats():
 
             # If we have valid data for both batting and pitching stats
             if batting is not None and 'IDfg' in batting.columns:  # Use 'IDfg' for player identifier
+                # Select only columns that exist in the dataframe
+                batting_columns = ['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
+                available_batting_columns = [col for col in batting_columns if col in batting.columns]
                 batting['year'] = year
-                all_stats = pd.concat([all_stats, batting[['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
+                all_stats = pd.concat([all_stats, batting[available_batting_columns + ['year']]])
 
             if pitching is not None and 'IDfg' in pitching.columns:
+                # Select only columns that exist in the dataframe
+                pitching_columns = ['IDfg', 'G', 'IP', 'SO', 'BB', 'ERA']
+                available_pitching_columns = [col for col in pitching_columns if col in pitching.columns]
                 pitching['year'] = year
                 pitching = pitching.rename(columns={'IDfg': 'playerID'})  # Rename to match with batting stats
-                all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'year']]])
+                all_stats = pd.concat([all_stats, pitching[available_pitching_columns + ['year']]])
 
         except Exception as e:
             st.error(f"Error fetching stats for {year}: {e}")
     
+    # Convert 'year' column from float to int
+    if 'year' in all_stats.columns:
+        all_stats['year'] = all_stats['year'].astype(int)
+
     return all_stats
 
 def main():
