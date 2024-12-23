@@ -330,19 +330,6 @@ def main():
         populate_hitter_input_values(hitter_name_1, hitter_year_1, 1)
         with col4:
             H_1 = st.text_input("**H**", value="", key="H_key1")
-        with col5:
-            Double_1 = st.text_input("**2B**", value="", key="Double_key1")
-        with col6:
-            Triple_1 = st.text_input("**3B**", value="", key="Triple_key1")
-        with col7:
-            HR_1 = st.text_input("**HR**", value="", key="HR_key1")
-        with col8:
-            BB_H_1 = st.text_input("**Hitter BB**", value="", key="BB_key1")
-        with col9:
-            SB_1 = st.text_input("**SB**", value="", key="SB_key1")
-        with col10:
-            AVG_1 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key1")
-
     ##------2------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -361,18 +348,6 @@ def main():
         populate_hitter_input_values(hitter_name_2, hitter_year_2, 2)
         with col4:
             H_2 = st.text_input("**H**", value="", key="H_key2")
-        with col5:
-            Double_2 = st.text_input("**2B**", value="", key="Double_key2")
-        with col6:
-            Triple_2 = st.text_input("**3B**", value="", key="Triple_key2")
-        with col7:
-            HR_2 = st.text_input("**HR**", value="", key="HR_key2")
-        with col8:
-            BB_H_2 = st.text_input("**Hitter BB**", value="", key="BB_key2")
-        with col9:
-            SB_2 = st.text_input("**SB**", value="", key="SB_key2")
-        with col10:
-            AVG_2 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key2")
 
     ##-------3------------
     with st.container():
@@ -392,19 +367,6 @@ def main():
         populate_hitter_input_values(hitter_name_3, hitter_year_3, 3)
         with col4:
             H_3 = st.text_input("**H**", value="", key="H_key3")
-        with col5:
-            Double_3 = st.text_input("**2B**", value="", key="Double_key3")
-        with col6:
-            Triple_3 = st.text_input("**3B**", value="", key="Triple_key3")
-        with col7:
-            HR_3 = st.text_input("**HR**", value="", key="HR_key3")
-        with col8:
-            BB_H_3 = st.text_input("**Hitter BB**", value="", key="BB_key3")
-        with col9:
-            SB_3 = st.text_input("**SB**", value="", key="SB_key3")
-        with col10:
-            AVG_3 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key3")
-
     ##-------4------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -423,19 +385,6 @@ def main():
         populate_hitter_input_values(hitter_name_4, hitter_year_4, 4)
         with col4:
             H_4 = st.text_input("**H**", value="", key="H_key4")
-        with col5:
-            Double_4 = st.text_input("**2B**", value="", key="Double_key4")
-        with col6:
-            Triple_4 = st.text_input("**3B**", value="", key="Triple_key4")
-        with col7:
-            HR_4 = st.text_input("**HR**", value="", key="HR_key4")
-        with col8:
-            BB_H_4 = st.text_input("**Hitter BB**", value="", key="BB_key4")
-        with col9:
-            SB_4 = st.text_input("**SB**", value="", key="SB_key4")
-        with col10:
-            AVG_4 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key4")
-
     ##-------5------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -454,19 +403,6 @@ def main():
         populate_hitter_input_values(hitter_name_5, hitter_year_5, 5)
         with col4:
             H_5 = st.text_input("**H**", value="", key="H_key5")
-        with col5:
-            Double_5 = st.text_input("**2B**", value="", key="Double_key5")
-        with col6:
-            Triple_5 = st.text_input("**3B**", value="", key="Triple_key5")
-        with col7:
-            HR_5 = st.text_input("**HR**", value="", key="HR_key5")
-        with col8:
-            BB_H_5 = st.text_input("**Hitter BB**", value="", key="BB_key5")
-        with col9:
-            SB_5 = st.text_input("**SB**", value="", key="SB_key5")
-        with col10:
-            AVG_5 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key5")
-
     ##-------6------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -485,19 +421,6 @@ def main():
         populate_hitter_input_values(hitter_name_6, hitter_year_6, 6)
         with col4:
             H_6 = st.text_input("**H**", value="", key="H_key6")
-        with col5:
-            Double_6 = st.text_input("**2B**", value="", key="Double_key6")
-        with col6:
-            Triple_6 = st.text_input("**3B**", value="", key="Triple_key6")
-        with col7:
-            HR_6 = st.text_input("**HR**", value="", key="HR_key6")
-        with col8:
-            BB_H_6 = st.text_input("**Hitter BB**", value="", key="BB_key6")
-        with col9:
-            SB_6 = st.text_input("**SB**", value="", key="SB_key6")
-        with col10:
-            AVG_6 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key6")
-
     ##-------7------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -516,19 +439,6 @@ def main():
         populate_hitter_input_values(hitter_name_7, hitter_year_7, 7)
         with col4:
             H_7 = st.text_input("**H**", value="", key="H_key7")
-        with col5:
-            Double_7 = st.text_input("**2B**", value="", key="Double_key7")
-        with col6:
-            Triple_7 = st.text_input("**3B**", value="", key="Triple_key7")
-        with col7:
-            HR_7 = st.text_input("**HR**", value="", key="HR_key7")
-        with col8:
-            BB_H_7 = st.text_input("**Hitter BB**", value="", key="BB_key7")
-        with col9:
-            SB_7 = st.text_input("**SB**", value="", key="SB_key7")
-        with col10:
-            AVG_7 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key7")
-
     ##-------8------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -547,19 +457,6 @@ def main():
         populate_hitter_input_values(hitter_name_8, hitter_year_8, 8)
         with col4:
             H_8 = st.text_input("**H**", value="", key="H_key8")
-        with col5:
-            Double_8 = st.text_input("**2B**", value="", key="Double_key8")
-        with col6:
-            Triple_8 = st.text_input("**3B**", value="", key="Triple_key8")
-        with col7:
-            HR_8 = st.text_input("**HR**", value="", key="HR_key8")
-        with col8:
-            BB_H_8 = st.text_input("**Hitter BB**", value="", key="BB_key8")
-        with col9:
-            SB_8 = st.text_input("**SB**", value="", key="SB_key8")
-        with col10:
-            AVG_8 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key8")
-
     ##-------9------------
     with st.container():
         col0,colb1,col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([.25, .3, 2, 1.2, 1.2, 1 , 1, 1, 1, 1, 1, 1])
@@ -578,19 +475,6 @@ def main():
         populate_hitter_input_values(hitter_name_9, hitter_year_9, 9)
         with col4:
             H_9 = st.text_input("**H**", value="", key="H_key9")
-        with col5:
-            Double_9 = st.text_input("**2B**", value="", key="Double_key9")
-        with col6:
-            Triple_9 = st.text_input("**3B**", value="", key="Triple_key9")
-        with col7:
-            HR_9 = st.text_input("**HR**", value="", key="HR_key9")
-        with col8:
-            BB_H_9 = st.text_input("**Hitter BB**", value="", key="BB_key9")
-        with col9:
-            SB_9 = st.text_input("**SB**", value="", key="SB_key9")
-        with col10:
-            AVG_9 = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key9")
-
     ##-----SP-------------
     with st.container():
         col0, colb1, col1, col2, col3, col4, col5, col6, col7, col8   = st.columns([ .25,.2, 1.4, .9, .9, 1 , 1, 1, 1, 1])
@@ -609,15 +493,6 @@ def main():
         populate_pitcher_input_values(pitcher_name_1, pitcher_year_1, 1)
         with col4:
             G_1 = st.text_input("**G**", value="", key="G_key1")
-        with col5:
-            IP_1 = st.text_input("**IP**", value="", key="IP_key1")
-        with col6:
-            SO_1 = st.text_input("**SO**", value="", key="SO_key1")
-        with col7:
-            BB_P_1 = st.text_input("**Pitcher BB**", value="", key="BB_P_key1")
-        with col8:
-            ERA_1 = st.number_input("**ERA**", min_value=0.00, max_value=10.00, key="ERA_key1")
-
     ##-----P2-------------
     with st.container():
         col0, colb1, col1, col2, col3, col4, col5, col6, col7, col8   = st.columns([ .25,.2, 1.4, .9, .9, 1 , 1, 1, 1, 1])
@@ -636,15 +511,6 @@ def main():
         populate_pitcher_input_values(pitcher_name_2, pitcher_year_2, 2)
         with col4:
             G_2 = st.text_input("**G**", value="", key="G_key2")
-        with col5:
-            IP_2 = st.text_input("**IP**", value="", key="IP_key2")
-        with col6:
-            SO_2 = st.text_input("**SO**", value="", key="SO_key2")
-        with col7:
-            BB_P_2 = st.text_input("**Pitcher BB**", value="", key="BB_P_key2")
-        with col8:
-            ERA_2 = st.number_input("**ERA**", min_value=0.00, max_value=10.00, key="ERA_key2")
-
     ##-----P3-------------
     with st.container():
         col0, colb1, col1, col2, col3, col4, col5, col6, col7, col8   = st.columns([ .25,.2, 1.4, .9, .9, 1 , 1, 1, 1, 1])
@@ -663,16 +529,6 @@ def main():
         populate_pitcher_input_values(pitcher_name_3, pitcher_year_3, 3)
         with col4:
             G_3 = st.text_input("**G**", value="", key="G_key3")
-        with col5:
-            IP_3 = st.text_input("**IP**", value="", key="IP_key3")
-        with col6:
-            SO_3 = st.text_input("**SO**", value="", key="SO_key3")
-        with col7:
-            BB_P_3 = st.text_input("**Pitcher BB**", value="", key="BB_P_key3")
-        with col8:
-            ERA_3 = st.number_input("**ERA**", min_value=0.00, max_value=10.00, key="ERA_key3")
-
-
     ##-----P4-------------
     with st.container():
         col0, colb1, col1, col2, col3, col4, col5, col6, col7, col8   = st.columns([ .25,.2, 1.4, .9, .9, 1 , 1, 1, 1, 1])
@@ -691,15 +547,6 @@ def main():
         populate_pitcher_input_values(pitcher_name_4, pitcher_year_4, 4)
         with col4:
             G_4 = st.text_input("**G**", value="", key="G_key4")
-        with col5:
-            IP_4 = st.text_input("**IP**", value="", key="IP_key4")
-        with col6:
-            SO_4 = st.text_input("**SO**", value="", key="SO_key4")
-        with col7:
-            BB_P_4 = st.text_input("**Pitcher BB**", value="", key="BB_P_key4")
-        with col8:
-            ERA_4 = st.number_input("**ERA**", min_value=0.00, max_value=10.00, key="ERA_key4")
-
      ##-----P5-------------
     with st.container():
         col0, colb1, col1, col2, col3, col4, col5, col6, col7, col8   = st.columns([ .25,.2, 1.4, .9, .9, 1 , 1, 1, 1, 1])
@@ -718,15 +565,7 @@ def main():
         populate_pitcher_input_values(pitcher_name_5, pitcher_year_5, 5)
         with col4:
             G_5 = st.text_input("**G**", value="", key="G_key5")
-        with col5:
-            IP_5 = st.text_input("**IP**", value="", key="IP_key5")
-        with col6:
-            SO_5 = st.text_input("**SO**", value="", key="SO_key5")
-        with col7:
-            BB_P_5 = st.text_input("**Pitcher BB**", value="", key="BB_P_key5")
-        with col8:
-            ERA_5 = st.number_input("**ERA**", min_value=0.00, max_value=10.00, key="ERA_key5")
-
+            
     if st.button("Create Lineup!!"):
         
         df_lineup = pd.concat([
