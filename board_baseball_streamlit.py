@@ -14,11 +14,18 @@ def get_player_stats():
             # Fetch pitching stats for the given year
             pitching = pitching_stats(year)
 
-            # Debug: Show the first few rows of batting and pitching data for a specific year
-            st.write(f"Batting stats for {year}:")
-            st.write(batting.head())  # Show the first few rows of batting data
-            st.write(f"Pitching stats for {year}:")
-            st.write(pitching.head())  # Show the first few rows of pitching data
+            # Debug: Show the number of rows for batting and pitching stats for the current year
+            if batting is not None:
+                st.write(f"Batting stats for {year}:")
+                st.write(f"Number of batting stats rows for {year}: {batting.shape[0]}")
+            else:
+                st.write(f"No batting stats found for {year}")
+
+            if pitching is not None:
+                st.write(f"Pitching stats for {year}:")
+                st.write(f"Number of pitching stats rows for {year}: {pitching.shape[0]}")
+            else:
+                st.write(f"No pitching stats found for {year}")
 
             # If we have valid data for batting stats
             if batting is not None and 'playerID' in batting.columns:
@@ -51,7 +58,7 @@ def main():
     if not all_stats_df.empty:
         # Display the number of rows in the dataframe
         num_rows = all_stats_df.shape[0]
-        st.write(f"Number of rows in the dataset: {num_rows}")
+        st.write(f"Number of rows in the final dataset: {num_rows}")
         
         # Display the first few rows of the final dataframe
         st.write("First few rows of the dataset:")
