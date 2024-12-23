@@ -15,16 +15,14 @@ def get_years():
             pitching = pitching_stats(year)
 
             # Check columns for batting stats
-            if batting is not None and 'IDfg' in batting.columns:  # Use 'IDfg' for recent years
-                years.update(batting['Season'].unique().tolist())  # Check if 'Season' exists
-            else:
-                st.warning(f"No 'IDfg' column found in batting stats for {year}. Columns: {batting.columns if batting is not None else 'None'}")
+            if batting is not None:
+                # Update years based on available data
+                years.update(batting['Season'].unique().tolist())
 
             # Check columns for pitching stats
-            if pitching is not None and 'IDfg' in pitching.columns:
-                years.update(pitching['Season'].unique().tolist())  # Using 'Season' for pitching
-            else:
-                st.warning(f"No 'IDfg' column found in pitching stats for {year}. Columns: {pitching.columns if pitching is not None else 'None'}")
+            if pitching is not None:
+                # Update years based on available data
+                years.update(pitching['Season'].unique().tolist())
 
     except Exception as e:
         st.error(f"Error fetching data: {e}")
@@ -44,19 +42,36 @@ def get_player_stats():
             # Fetch pitching stats
             pitching = pitching_stats(year)
 
-            # If we have valid data for both batting and pitching stats
-            if batting is not None and 'IDfg' in batting.columns:  # Use 'IDfg' for player identifier
-                # Select only columns that exist in the dataframe
-                batting_columns = ['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
+            # If we have valid data for batting stats
+            if batting is not None:
+                if 'IDfg' in batting.columns:  # Use 'IDfg' for recent years
+                    batting['year'] = year
+                    batting_columns = ['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
+                elif 'playerID' in batting.columns:  # Use 'playerID' for older years
+                    batting['year'] = year
+                    batting_columns = ['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
+                else:
+                    st.warning(f"No 'IDfg' or 'playerID' column found in batting stats for {year}.")
+                    continue  # Skip to next year if no valid identifier is found
+
+                # Filter available columns in batting
                 available_batting_columns = [col for col in batting_columns if col in batting.columns]
-                batting['year'] = year
                 all_stats = pd.concat([all_stats, batting[available_batting_columns + ['year']]])
 
-            if pitching is not None and 'IDfg' in pitching.columns:
-                # Select only columns that exist in the dataframe
-                pitching_columns = ['IDfg', 'G', 'IP', 'SO', 'BB', 'ERA']
+            # If we have valid data for pitching stats
+            if pitching is not None:
+                if 'IDfg' in pitching.columns:  # Use 'IDfg' for recent years
+                    pitching['year'] = year
+                    pitching_columns = ['IDfg', 'G', 'IP', 'SO', 'BB', 'ERA']
+                elif 'playerID' in pitching.columns:  # Use 'playerID' for older years
+                    pitching['year'] = year
+                    pitching_columns = ['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']
+                else:
+                    st.warning(f"No 'IDfg' or 'playerID' column found in pitching stats for {year}.")
+                    continue  # Skip to next year if no valid identifier is found
+
+                # Filter available columns in pitching
                 available_pitching_columns = [col for col in pitching_columns if col in pitching.columns]
-                pitching['year'] = year
                 pitching = pitching.rename(columns={'IDfg': 'playerID'})  # Rename to match with batting stats
                 all_stats = pd.concat([all_stats, pitching[available_pitching_columns + ['year']]])
 
