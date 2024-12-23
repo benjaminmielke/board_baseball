@@ -99,6 +99,11 @@ def main():
     all_stats_df = get_player_stats()
 
     if not all_stats_df.empty:
+        # Display the number of rows in the dataframe
+        num_rows = all_stats_df.shape[0]
+        st.write(f"Number of rows in the dataset: {num_rows}")
+        
+        # Display the dataframe itself
         st.write("Player Stats from 2000 to 2023:")
         st.dataframe(all_stats_df)
     else:
