@@ -44,6 +44,10 @@ def get_player_stats():
 
             # If we have valid data for batting stats
             if batting is not None:
+                # Print available columns for debugging purposes
+                st.write(f"Batting columns for {year}: {batting.columns.tolist()}")
+
+                # Check if 'IDfg' or 'playerID' is available
                 if 'IDfg' in batting.columns:  # Use 'IDfg' for recent years
                     batting['year'] = year
                     batting_columns = ['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
@@ -60,6 +64,10 @@ def get_player_stats():
 
             # If we have valid data for pitching stats
             if pitching is not None:
+                # Print available columns for debugging purposes
+                st.write(f"Pitching columns for {year}: {pitching.columns.tolist()}")
+
+                # Check if 'IDfg' or 'playerID' is available
                 if 'IDfg' in pitching.columns:  # Use 'IDfg' for recent years
                     pitching['year'] = year
                     pitching_columns = ['IDfg', 'G', 'IP', 'SO', 'BB', 'ERA']
