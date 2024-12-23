@@ -14,19 +14,19 @@ def get_player_stats():
             # Fetch pitching stats for the given year
             pitching = pitching_stats(year)
 
+            # Debug: Show the first few rows of batting and pitching data for a specific year
+            st.write(f"Batting stats for {year}:")
+            st.write(batting.head())  # Show the first few rows of batting data
+            st.write(f"Pitching stats for {year}:")
+            st.write(pitching.head())  # Show the first few rows of pitching data
+
             # If we have valid data for batting stats
-            if batting is not None:
-                # Check if 'playerID' exists in the columns of batting stats
-                if 'playerID' in batting.columns:
-                    # Filter data based on valid player IDs in the batting data
-                    all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
+            if batting is not None and 'playerID' in batting.columns:
+                all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
 
             # If we have valid data for pitching stats
-            if pitching is not None:
-                # Check if 'playerID' exists in the columns of pitching stats
-                if 'playerID' in pitching.columns:
-                    # Filter data based on valid player IDs in the pitching data
-                    all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'year']]])
+            if pitching is not None and 'playerID' in pitching.columns:
+                all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'year']]])
 
         except Exception as e:
             st.error(f"Error fetching stats for {year}: {e}")
