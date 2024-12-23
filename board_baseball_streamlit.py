@@ -47,6 +47,10 @@ def get_player_stats(player_name, year):
         player_pitching_stats['player_type'] = 'Pitcher'
         stats = pd.concat([stats, player_pitching_stats], ignore_index=True)
 
+    # Check if no stats are found and inform the user
+    if stats.empty:
+        st.write(f"No data available for {player_name} in {year}. This may be due to missing or incomplete stats.")
+    
     return stats
 
 def main():
