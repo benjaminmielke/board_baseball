@@ -14,27 +14,17 @@ def get_player_stats():
             # Fetch pitching stats for the given year
             pitching = pitching_stats(year)
 
-            # Check if the columns exist in the dataframe and print a warning if not
-            if batting is not None:
-                if 'playerID' not in batting.columns:
-                    st.warning(f"Warning: 'playerID' not found in batting stats for {year}. Available columns: {batting.columns}")
-                elif any(col not in batting.columns for col in ['H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']):
-                    st.warning(f"Warning: Some expected columns are missing in batting stats for {year}. Available columns: {batting.columns}")
-                else:
-                    all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'Season']]])
+            # If we have valid data for batting stats
+            if batting is not None and 'playerID' in batting.columns:
+                all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'Season']]])
 
-            # Check if the columns exist in the pitching dataframe
-            if pitching is not None:
-                if 'playerID' not in pitching.columns:
-                    st.warning(f"Warning: 'playerID' not found in pitching stats for {year}. Available columns: {pitching.columns}")
-                elif any(col not in pitching.columns for col in ['G', 'IP', 'SO', 'BB', 'ERA']):
-                    st.warning(f"Warning: Some expected columns are missing in pitching stats for {year}. Available columns: {pitching.columns}")
-                else:
-                    all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'Season']]])
+            # If we have valid data for pitching stats
+            if pitching is not None and 'playerID' in pitching.columns:
+                all_stats = pd.concat([all_stats, pitching[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA', 'Season']]])
 
         except Exception as e:
             st.error(f"Error fetching stats for {year}: {e}")
-
+    
     # Convert 'Season' (year) column from float to int
     if 'Season' in all_stats.columns:
         all_stats['Season'] = all_stats['Season'].astype(int)
