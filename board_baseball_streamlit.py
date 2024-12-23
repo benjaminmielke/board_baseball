@@ -29,14 +29,11 @@ def fetch_stats(year):
             # Clean up and select necessary columns for batting
             batting_df = batting_df[['Rk', 'Player', 'Age', 'G', 'AB', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
             
-            # Rename columns to match the desired format
-            batting_df = batting_df.rename(columns={"Player": "playerID", "BA": "batting_average"})
-            
             # Add 'Season' column for the year
             batting_df['Season'] = year
 
             # Clean up player names (strip leading/trailing spaces)
-            batting_df['playerID'] = batting_df['playerID'].str.strip()
+            batting_df['Player'] = batting_df['Player'].str.strip()
         else:
             batting_df = pd.DataFrame()  # Return empty DataFrame if no 'Rk' column
 
@@ -61,18 +58,15 @@ def fetch_stats(year):
 
             # Add 'Season' column for the year
             pitching_df['Season'] = year
-
-            # Rename columns for consistency
-            pitching_df = pitching_df.rename(columns={"Player": "playerID", "ERA": "earned_run_avg"})
             
             # Clean up player names
-            pitching_df['playerID'] = pitching_df['playerID'].str.strip()
+            pitching_df['Player'] = pitching_df['Player'].str.strip()
         else:
             pitching_df = pd.DataFrame()  # Return empty DataFrame if no 'Rk' column
 
         # Combine both batting and pitching dataframes
-        combined_df = pd.concat([batting_df[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'batting_average', 'Season']],
-                                 pitching_df[['playerID', 'G', 'IP', 'SO', 'BB', 'earned_run_avg', 'Season']]], ignore_index=True)
+        combined_df = pd.concat([batting_df[['Player', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'Season']],
+                                 pitching_df[['Player', 'G', 'IP', 'SO', 'BB', 'ERA', 'Season']]], ignore_index=True)
 
         return combined_df
 
@@ -91,7 +85,7 @@ def get_player_stats():
             all_stats = pd.concat([all_stats, stats_df], ignore_index=True)
 
     # Clean up the final DataFrame (if needed)
-    all_stats = all_stats.dropna(subset=['playerID'])  # Drop rows where playerID is missing
+    all_stats = all_stats.dropna(subset=['Player'])  # Drop rows where 'Player' is missing
 
     return all_stats
 
