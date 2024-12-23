@@ -32,8 +32,8 @@ def get_years():
     # Return years in sorted order
     return sorted(list(years))
 
-# Function to fetch the top 10 player stats
-def get_top_10_player_stats(years):
+# Function to fetch player stats for all years (2000 - 2023)
+def get_player_stats():
     all_stats = pd.DataFrame()
 
     # Fetch stats for a range of years from 2000 to 2023
@@ -57,10 +57,7 @@ def get_top_10_player_stats(years):
         except Exception as e:
             st.error(f"Error fetching stats for {year}: {e}")
     
-    # Show top 10 rows of the data
-    top_10_stats = all_stats.head(10)
-
-    return top_10_stats
+    return all_stats
 
 def main():
     # Streamlit user interface
@@ -73,12 +70,12 @@ def main():
         st.write("No data found for the selected range.")
         return
 
-    # Fetch and display the top 10 player stats
-    top_10_stats_df = get_top_10_player_stats(years)
+    # Fetch and display the player stats for all years (2000 - 2023)
+    all_stats_df = get_player_stats()
 
-    if not top_10_stats_df.empty:
-        st.write("Top 10 Player Stats:")
-        st.dataframe(top_10_stats_df)
+    if not all_stats_df.empty:
+        st.write("Player Stats from 2000 to 2023:")
+        st.dataframe(all_stats_df)
     else:
         st.write("No stats available for the selected years.")
 
