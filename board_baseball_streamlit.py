@@ -1,17 +1,6 @@
 import streamlit as st
 import pandas as pd
 from pybaseball import batting_stats, pitching_stats
-from functools import lru_cache
-
-# Caching function for batting stats to speed up repeated requests
-@st.cache_data(ttl=3600)  # Cache data for 1 hour
-def get_batting_stats(year):
-    return batting_stats(year)
-
-# Caching function for pitching stats to speed up repeated requests
-@st.cache_data(ttl=3600)  # Cache data for 1 hour
-def get_pitching_stats(year):
-    return pitching_stats(year)
 
 # Function to fetch all years from 2000 onwards
 def get_years():
@@ -20,10 +9,10 @@ def get_years():
     try:
         # Fetch stats for a range of years from 2000 to 2023
         for year in range(2000, 2024):
-            # Fetch batting stats for the year (cached)
-            batting = get_batting_stats(year)
-            # Fetch pitching stats for the year (cached)
-            pitching = get_pitching_stats(year)
+            # Fetch batting stats for the year
+            batting = batting_stats(year)
+            # Fetch pitching stats for the year
+            pitching = pitching_stats(year)
 
             # Check columns for batting stats
             if batting is not None and 'playerID' in batting.columns:
@@ -50,10 +39,10 @@ def get_top_10_player_stats(years):
     # Fetch stats for a range of years from 2000 to 2023
     for year in range(2000, 2024):
         try:
-            # Fetch batting stats (cached)
-            batting = get_batting_stats(year)
-            # Fetch pitching stats (cached)
-            pitching = get_pitching_stats(year)
+            # Fetch batting stats
+            batting = batting_stats(year)
+            # Fetch pitching stats
+            pitching = pitching_stats(year)
 
             # If we have valid data for both batting and pitching stats
             if batting is not None and 'playerID' in batting.columns:
