@@ -4,21 +4,24 @@ from pybaseball import playerid_lookup, batting_stats, pitching_stats
 
 # Function to fetch players based on their type (Hitter or Pitcher) and available years
 def get_players_and_years(player_type):
-    # Fetch batting and pitching stats for the range of years from 1985 onwards
     players = []
     years = set()  # To store unique years for the selected player type
 
-    # Fetch the stats for a range of years (e.g., from 1985 to 2023)
+    # Fetch stats for a range of years from 1985 to 2023
     try:
         for year in range(1985, 2024):
             if player_type == "Hitter":
                 batting = batting_stats(year)
-                players += batting['playerID'].unique().tolist()
-                years.update(batting['year'].unique().tolist())
+                if 'playerID' not in batting.columns:
+                    st.write(f"Warning: 'playerID' not found in batting stats for {year}. Columns available: {batting.columns}")
+                players += batting['playerID'].unique().tolist() if 'playerID' in batting.columns else []
+                years.update(batting['year'].unique().tolist())  # Check if 'year' exists
             elif player_type == "Pitcher":
                 pitching = pitching_stats(year)
-                players += pitching['playerID'].unique().tolist()
-                years.update(pitching['year'].unique().tolist())
+                if 'playerID' not in pitching.columns:
+                    st.write(f"Warning: 'playerID' not found in pitching stats for {year}. Columns available: {pitching.columns}")
+                players += pitching['playerID'].unique().tolist() if 'playerID' in pitching.columns else []
+                years.update(pitching['year'].unique().tolist())  # Check if 'year' exists
     except Exception as e:
         st.error(f"Error fetching data: {e}")
     
@@ -56,8 +59,8 @@ def get_player_stats(player_name, player_type, year):
     try:
         if player_type == "Hitter":
             batting = batting_stats(year)
-            player_batting_stats = batting[batting['playerID'] == player_id]
-            player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
+            player_batting_stats = batting[batting['playerID'] == player_id] if 'playerID' in batting.columns else pd.DataFrame()
+            player_batting_stats = player_batting_stats[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']] if not player_batting_stats.empty else pd.DataFrame()
             player_batting_stats['player_type'] = 'Hitter'
             return player_batting_stats
     except Exception as e:
@@ -67,8 +70,8 @@ def get_player_stats(player_name, player_type, year):
     try:
         if player_type == "Pitcher":
             pitching = pitching_stats(year)
-            player_pitching_stats = pitching[pitching['playerID'] == player_id]
-            player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']]
+            player_pitching_stats = pitching[pitching['playerID'] == player_id] if 'playerID' in pitching.columns else pd.DataFrame()
+            player_pitching_stats = player_pitching_stats[['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']] if not player_pitching_stats.empty else pd.DataFrame()
             player_pitching_stats['player_type'] = 'Pitcher'
             return player_pitching_stats
     except Exception as e:
