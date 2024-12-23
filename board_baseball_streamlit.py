@@ -19,6 +19,8 @@ def fetch_stats(year):
 
         # Parse the table into a DataFrame
         batting_df = pd.read_html(str(batting_table))[0]
+        num_rows = batting_df.shape[0]
+        st.write(f"Number of rows in the batting dataset: {num_rows}")
         
         # Debugging: Show columns of the batting DataFrame
         st.write(f"Columns in Batting DataFrame for {year}:")
@@ -46,6 +48,8 @@ def fetch_stats(year):
 
         # Parse the table into a DataFrame
         pitching_df = pd.read_html(str(pitching_table))[0]
+        num_rows = pitching_df.shape[0]
+        st.write(f"Number of rows in the pitching dataset: {num_rows}")
 
         # Debugging: Show columns of the pitching DataFrame
         st.write(f"Columns in Pitching DataFrame for {year}:")
