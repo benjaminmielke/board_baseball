@@ -15,10 +15,10 @@ def get_years():
             pitching = pitching_stats(year)
 
             # Check columns for batting stats
-            if batting is not None and 'playerID' in batting.columns:
-                years.update(batting['year'].unique().tolist())  # Check if 'year' exists
+            if batting is not None and 'IDfg' in batting.columns:  # Use 'IDfg' for recent years
+                years.update(batting['Season'].unique().tolist())  # Check if 'Season' exists
             else:
-                st.warning(f"No 'playerID' column found in batting stats for {year}. Columns: {batting.columns if batting is not None else 'None'}")
+                st.warning(f"No 'IDfg' column found in batting stats for {year}. Columns: {batting.columns if batting is not None else 'None'}")
 
             # Check columns for pitching stats
             if pitching is not None and 'IDfg' in pitching.columns:
@@ -45,9 +45,9 @@ def get_top_10_player_stats(years):
             pitching = pitching_stats(year)
 
             # If we have valid data for both batting and pitching stats
-            if batting is not None and 'playerID' in batting.columns:
+            if batting is not None and 'IDfg' in batting.columns:  # Use 'IDfg' for player identifier
                 batting['year'] = year
-                all_stats = pd.concat([all_stats, batting[['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
+                all_stats = pd.concat([all_stats, batting[['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA', 'year']]])
 
             if pitching is not None and 'IDfg' in pitching.columns:
                 pitching['year'] = year
