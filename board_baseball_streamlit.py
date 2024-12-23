@@ -1,4 +1,4 @@
-import streamlit as st
+ import streamlit as st
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -26,10 +26,17 @@ def fetch_stats(year):
 
         # Filter columns and clean up the data
         if 'Rk' in batting_df.columns:
+            # Ensure the correct columns for batting stats
             batting_df = batting_df[['Rk', 'Player', 'Age', 'G', 'AB', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
-            batting_df['Season'] = year
+
+            # Rename 'Player' to 'playerID' and 'BA' to 'batting_average'
             batting_df = batting_df.rename(columns={"Player": "playerID", "BA": "batting_average"})
-            batting_df['playerID'] = batting_df['playerID'].str.strip()  # Clean up player names
+            
+            # Add 'Season' column
+            batting_df['Season'] = year
+
+            # Clean up player names
+            batting_df['playerID'] = batting_df['playerID'].str.strip()  # Remove leading/trailing spaces
         else:
             batting_df = pd.DataFrame()
 
@@ -49,10 +56,17 @@ def fetch_stats(year):
 
         # Filter columns and clean up the data
         if 'Rk' in pitching_df.columns:
+            # Ensure the correct columns for pitching stats
             pitching_df = pitching_df[['Rk', 'Player', 'Age', 'G', 'IP', 'SO', 'BB', 'ERA']]
+            
+            # Add 'Season' column
             pitching_df['Season'] = year
+
+            # Rename 'Player' to 'playerID' and 'ERA' to 'earned_run_avg'
             pitching_df = pitching_df.rename(columns={"Player": "playerID", "ERA": "earned_run_avg"})
-            pitching_df['playerID'] = pitching_df['playerID'].str.strip()  # Clean up player names
+            
+            # Clean up player names
+            pitching_df['playerID'] = pitching_df['playerID'].str.strip()  # Remove leading/trailing spaces
         else:
             pitching_df = pd.DataFrame()
 
