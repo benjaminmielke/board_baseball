@@ -1,33 +1,36 @@
 import streamlit as st
 import pandas as pd
-from pybaseball import batting_stats, pitching_stats
+from pybaseball import batting_stats, pitching_stats, playerid_lookup
+from pybaseball.playerid_lookup import playerid_lookup
 
 # Function to fetch player stats for the years 2021 to 2024
 def get_player_stats():
     all_stats = pd.DataFrame()
 
+    # Lookup player ID data from Baseball-Reference (bbref)
+    players = playerid_lookup()
+
+    # Filter out players we want to focus on (batters and pitchers)
+    player_ids = players['playerID']
+
     # Fetch stats for a specific range of years (2021 to 2024)
-    for year in range(2021, 2024):  # Adjusted year range to 2021-2024
+    for year in range(2021, 2025):  # Adjusted year range to 2021-2024
         try:
-            # Fetch batting stats
+            # Fetch batting stats for the given year
             batting = batting_stats(year)
-            # Fetch pitching stats
+            # Fetch pitching stats for the given year
             pitching = pitching_stats(year)
 
             # If we have valid data for batting stats
             if batting is not None:
-                # Print available columns for debugging purposes
-                st.write(f"Batting columns for {year}: {batting.columns.tolist()}")
+                # Filter data based on playerID from the lookup
+                batting = batting[batting['playerID'].isin(player_ids)]
 
-                # Check if 'IDfg' or 'playerID' is available
-                if 'IDfg' in batting.columns:  # Use 'IDfg' for recent years
-                    batting['year'] = year
-                    batting_columns = ['IDfg', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
-                elif 'playerID' in batting.columns:  # Use 'playerID' for older years
+                if 'playerID' in batting.columns:
                     batting['year'] = year
                     batting_columns = ['playerID', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']
                 else:
-                    st.warning(f"No 'IDfg' or 'playerID' column found in batting stats for {year}.")
+                    st.warning(f"No 'playerID' column found in batting stats for {year}.")
                     continue  # Skip to next year if no valid identifier is found
 
                 # Filter available columns in batting
@@ -36,23 +39,18 @@ def get_player_stats():
 
             # If we have valid data for pitching stats
             if pitching is not None:
-                # Print available columns for debugging purposes
-                st.write(f"Pitching columns for {year}: {pitching.columns.tolist()}")
+                # Filter data based on playerID from the lookup
+                pitching = pitching[pitching['playerID'].isin(player_ids)]
 
-                # Check if 'IDfg' or 'playerID' is available
-                if 'IDfg' in pitching.columns:  # Use 'IDfg' for recent years
-                    pitching['year'] = year
-                    pitching_columns = ['IDfg', 'G', 'IP', 'SO', 'BB', 'ERA']
-                elif 'playerID' in pitching.columns:  # Use 'playerID' for older years
+                if 'playerID' in pitching.columns:
                     pitching['year'] = year
                     pitching_columns = ['playerID', 'G', 'IP', 'SO', 'BB', 'ERA']
                 else:
-                    st.warning(f"No 'IDfg' or 'playerID' column found in pitching stats for {year}.")
+                    st.warning(f"No 'playerID' column found in pitching stats for {year}.")
                     continue  # Skip to next year if no valid identifier is found
 
                 # Filter available columns in pitching
                 available_pitching_columns = [col for col in pitching_columns if col in pitching.columns]
-                pitching = pitching.rename(columns={'IDfg': 'playerID'})  # Rename to match with batting stats
                 all_stats = pd.concat([all_stats, pitching[available_pitching_columns + ['year']]])
 
         except Exception as e:
