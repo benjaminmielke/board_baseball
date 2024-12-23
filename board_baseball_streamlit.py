@@ -309,72 +309,7 @@ def main():
     hitter_names, hitter_years = read_hitter_csv()
     
 
-    with st.container():
-        st.header(f":green[Select Single Hitter]")
-        colb1, colb2, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10   = st.columns([1, 1, 2, 1.25, 1.25, 1 , 1, 1, 1, 1, 1, 1.25])
-        with col1:
-            hitter_name = st.selectbox(f":green[**Hitter Name**]", hitter_names, key="hitter_name_key")
-        with col2:
-            hitter_year = st.selectbox(f":green[**Hitter Year**]", hitter_years, key="hitter_year_key")
-        with col3:
-            options = ["", "C", "1B", "2B", "3B", "SS", "OF", "DH"]
-            hitter_position = st.selectbox(f":green[**Hitter Position**]", options, key="hitter_position_key")
-        # Populate the hitter input fields when the user selects a name and year
-        populate_hitter_input_values(hitter_name, hitter_year, 0)
-        with col4:
-            H = st.text_input("**H**", value="", key="H_key")
-        with col5:
-            Double = st.text_input("**2B**", value="", key="Double_key")
-        with col6:
-            Triple = st.text_input("**3B**", value="", key="Triple_key")
-        with col7:
-            HR = st.text_input("**HR**", value="", key="HR_key")
-        with col8:
-            BB_H = st.text_input("**Hitter BB**", value="", key="BB_key")
-        with col9:
-            SB = st.text_input("**SB**", value="", key="SB_key")
-        with col10:
-            AVG = st.number_input("**AVG**", min_value=.000, max_value=.500, key="AVG_key")
-        with colb1:
-            st.button(f":red[Clear Hitter Inputs]", on_click=clear_hitter_text)      
-        with colb2:
-            if st.button(f":green[Calculate Hitter Metrics]"):
-                result = calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Double, Triple, HR, BB_H, SB, AVG)
-                with col2:
-                    st.write(result)
-    
-    
 
-    with st.container():
-        st.header(f":blue[Select Single Pitcher]")
-        colb1, colb2, col1, col2, col3, col4, col5, col6, col7, col8   = st.columns([.9, .9, 1.8, 1.25, 1.25, 1.2 , 1.2, 1.2, 1.2, 1.25])
-        with col1:
-            pitcher_name = st.selectbox(f":blue[**Pitcher Name**]", pitcher_names, key="pitcher_name_key")
-        with col2:
-            pitcher_year = st.selectbox(f":blue[**Pitcher Year**]", pitcher_years, key="pitcher_year_key")
-        with col3:
-            options = ['', "SP", "RP", "P"]
-            pitcher_position = st.selectbox(f":blue[**Pitcher Position**]", options, key="pitcher_position_key")
-        # Populate the hitter input fields when the user selects a name and year
-        populate_pitcher_input_values(pitcher_name, pitcher_year, 0)
-        with col4:
-            G = st.text_input("**G**", value="", key="G_key")
-        with col5:
-            IP = st.text_input("**IP**", value="", key="IP_key")
-        with col6:
-            SO = st.text_input("**SO**", value="", key="SO_key")
-        with col7:
-            BB_P = st.text_input("**Pitcher BB**", value="", key="BB_P_key")
-        with col8:
-            ERA = st.number_input("**ERA**", min_value=0.00, max_value=10.00, key="ERA_key")
-        with colb1:
-            st.button(f":red[Clear Pitcher Inputs]", on_click=clear_pitcher_text)
-        with colb2:
-            if st.button(f":blue[Calculate Pitcher Metrics]"):
-                result = calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA, G, float(IP), SO, BB_P)
-                with col2:
-                    st.write(result)
-        
         
    ##-------1------------
     with st.container():
