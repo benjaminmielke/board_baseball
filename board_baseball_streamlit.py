@@ -49,9 +49,9 @@ def main():
         num_rows = all_stats_df.shape[0]
         st.write(f"Number of rows in the dataset: {num_rows}")
         
-        # Display the dataframe itself
-        st.write("Player Stats from 2021 to 2024:")
-        st.dataframe(all_stats_df)
+        # Display the first few rows of the final dataframe
+        st.write("First few rows of the dataset:")
+        st.dataframe(all_stats_df.head())  # Display only the first few rows of the final dataframe
     else:
         st.write("No stats available for the selected years.")
 
