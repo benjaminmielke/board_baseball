@@ -20,7 +20,11 @@ def fetch_stats(year):
         # Parse the table into a DataFrame
         batting_df = pd.read_html(str(batting_table))[0]
 
-        # Filter columns and clean up the data
+        # Debug: Show columns for the batting DataFrame
+        st.write(f"Columns in Batting DataFrame for {year}:")
+        st.write(batting_df.columns)
+
+        # Filter columns and clean up the data (we will need to adjust this based on actual columns)
         if 'Rk' in batting_df.columns:
             batting_df = batting_df[['Rk', 'Player', 'Age', 'G', 'AB', 'H', '2B', '3B', 'HR', 'BB', 'SB', 'BA']]
             batting_df['Season'] = year
@@ -39,7 +43,11 @@ def fetch_stats(year):
         # Parse the table into a DataFrame
         pitching_df = pd.read_html(str(pitching_table))[0]
 
-        # Filter columns and clean up the data
+        # Debug: Show columns for the pitching DataFrame
+        st.write(f"Columns in Pitching DataFrame for {year}:")
+        st.write(pitching_df.columns)
+
+        # Filter columns and clean up the data (we will need to adjust this based on actual columns)
         if 'Rk' in pitching_df.columns:
             pitching_df = pitching_df[['Rk', 'Player', 'Age', 'G', 'IP', 'SO', 'BB', 'ERA']]
             pitching_df['Season'] = year
