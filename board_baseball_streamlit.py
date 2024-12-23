@@ -1,14 +1,21 @@
 import streamlit as st
 import pandas as pd
 from pybaseball import playerid_lookup, batting_stats, pitching_stats
-import time
 
 # Function to fetch players based on their type (Hitter or Pitcher)
 def get_players_by_type(player_type):
     # Fetch batting and pitching stats for a range of years
-    all_batting = batting_stats(2020)  # Example: Batting data from 2020
-    all_pitching = pitching_stats(2020)  # Example: Pitching data from 2020
-    
+    try:
+        all_batting = batting_stats(2020)  # Example: Batting data from 2020
+        all_pitching = pitching_stats(2020)  # Example: Pitching data from 2020
+    except Exception as e:
+        st.error(f"Error fetching data: {e}")
+        return []
+
+    # Debug: Print columns to inspect the structure of the DataFrame
+    st.write("Batting Data Columns:", all_batting.columns)
+    st.write("Pitching Data Columns:", all_pitching.columns)
+
     if player_type == "Hitter":
         players = all_batting['playerID'].unique()  # Hitter IDs
     elif player_type == "Pitcher":
@@ -56,6 +63,10 @@ def get_player_stats(player_name, player_type, year):
         st.error(f"Error fetching pitching stats for {year}: {e}")
         return pd.DataFrame()
 
+    # Debug: Print columns to inspect the structure of the DataFrame
+    st.write("Batting Stats Columns:", batting.columns)
+    st.write("Pitching Stats Columns:", pitching.columns)
+
     # Filter data for the specific player
     player_batting_stats = batting[batting['playerID'] == player_id]
     player_pitching_stats = pitching[pitching['playerID'] == player_id]
@@ -88,6 +99,10 @@ def main():
 
     # Get the list of players based on the selected type
     players = get_players_by_type(player_type)
+
+    if not players:
+        st.write("No players found.")
+        return
 
     # Dropdown for selecting a player
     player_name = st.selectbox("Select Player", players)
