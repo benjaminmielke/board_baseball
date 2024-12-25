@@ -295,11 +295,14 @@ if st.button("Generate Lineup"):
         mime="image/png"
     )
 
-    # Provide download button for CSV
+    # Determine the team name or use a default name
+    csv_file_name = f"{team_name}_lineup.csv" if team_name else "baseball_lineup.csv"
+
+    # Provide download button for CSV with dynamic file name
     csv_bytes = combined_df.to_csv(index=False).encode()  # Convert DataFrame to CSV bytes
     st.download_button(
         label="Download Lineup as CSV",
         data=csv_bytes,
-        file_name="board_baseball_lineup.csv",
+        file_name=csv_file_name,
         mime="text/csv"
     )
