@@ -30,26 +30,32 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
+    # Use columns for layout
     col1, col2, col3 = st.columns(3)
+    
     with col1:
         player = st.selectbox(f"Player {i} (Hitter)", hitters_names, key=f"hitter_{i}_player")
     with col2:
         season = st.selectbox(f"Year for Player {i}", seasons, key=f"hitter_{i}_season")
     with col3:
         position = st.selectbox(f"Position for Player {i}", positions_hitter, key=f"hitter_{i}_position")
+    
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
 # Create input fields for pitchers
 st.header("Pitching Lineup")
 pitching_lineup = []
 for i in range(1, 6):
+    # Use columns for layout
     col1, col2, col3 = st.columns(3)
+    
     with col1:
         player = st.selectbox(f"Player {i} (Pitcher)", pitchers_names, key=f"pitcher_{i}_player")
     with col2:
         season = st.selectbox(f"Year for Player {i}", seasons, key=f"pitcher_{i}_season")
     with col3:
         position = st.selectbox(f"Role for Player {i}", positions_pitcher, key=f"pitcher_{i}_position")
+    
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
 # Button to generate the lineup
