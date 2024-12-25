@@ -17,10 +17,6 @@ pitchers_file = 'pitchers_stats.csv'
 hitters_data = load_data(hitters_file)
 pitchers_data = load_data(pitchers_file)
 
-# Print columns to debug and inspect the available stats
-st.write("Hitters data columns:", hitters_data.columns)
-st.write("Pitchers data columns:", pitchers_data.columns)
-
 # Extract player names and seasons for the dropdowns
 hitters_names = sorted(hitters_data['Name'].unique())  # Updated column name
 pitchers_names = sorted(pitchers_data['Name'].unique())  # Updated column name
@@ -60,7 +56,7 @@ for i in range(1, 6):
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
-    # Display hitting lineup in a compact table
+    # Display hitting lineup in a compact table with left-aligned text
     st.write("### Hitting Lineup")
     hitter_stats = []
     for i, hitter in enumerate(hitting_lineup, 1):
@@ -85,10 +81,36 @@ if st.button("Generate Lineup"):
 
         hitter_stats.append(stats)
 
-    # Display the hitters' stats in a table format (compact)
-    st.table(hitter_stats)
+    # Create a DataFrame for easier formatting and display
+    hitter_df = pd.DataFrame(hitter_stats)
+    
+    # Display the DataFrame using st.markdown and apply CSS for left alignment
+    st.markdown(
+        f"""
+        <style>
+            .left-align {{
+                text-align: left;
+            }}
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+        </style>
+        """, unsafe_allow_html=True
+    )
 
-    # Display pitching lineup in a compact table
+    # Display the table
+    st.table(hitter_df)
+
+    # Display pitching lineup in a compact table with left-aligned text
     st.write("### Pitching Lineup")
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
@@ -113,5 +135,28 @@ if st.button("Generate Lineup"):
 
         pitcher_stats.append(stats)
 
-    # Display the pitchers' stats in a table format (compact)
-    st.table(pitcher_stats)
+    # Create a DataFrame for easier formatting and display
+    pitcher_df = pd.DataFrame(pitcher_stats)
+
+    # Display the table with left alignment
+    st.markdown(
+        f"""
+        <style>
+            table {{
+                width: 100%;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f4f4f4;
+            }}
+        </style>
+        """, unsafe_allow_html=True
+    )
+
+    # Display the table
+    st.table(pitcher_df)
