@@ -31,7 +31,7 @@ st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
     # Use columns for layout
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1, 1, 1])  # Distribute columns equally
     
     with col1:
         player = st.selectbox(f"Player {i} (Hitter)", hitters_names, key=f"hitter_{i}_player")
@@ -47,7 +47,7 @@ st.header("Pitching Lineup")
 pitching_lineup = []
 for i in range(1, 6):
     # Use columns for layout
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1, 1, 1])  # Distribute columns equally
     
     with col1:
         player = st.selectbox(f"Player {i} (Pitcher)", pitchers_names, key=f"pitcher_{i}_player")
