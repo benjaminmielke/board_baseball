@@ -9,6 +9,9 @@ def load_data(file_path):
 # App starts here
 st.title("Board Baseball Lineup Created")
 
+# Add an input field for the team name
+team_name = st.text_input("Enter your Team Name", "")
+
 # File paths for hitter and pitcher stats
 hitters_file = 'hitters_stats.csv'
 pitchers_file = 'pitchers_stats.csv'
@@ -57,6 +60,12 @@ for i in range(1, 6):
 # Button to generate the lineup
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
+
+    # Display team name if provided
+    if team_name:
+        st.write(f"### Team: {team_name}")
+    else:
+        st.write("### Team: [No team name provided]")
 
     # Display hitting lineup in a simple table format
     st.write("### Hitting Lineup")
