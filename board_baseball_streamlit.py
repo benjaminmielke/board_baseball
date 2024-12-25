@@ -30,12 +30,12 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    st.subheader(f"Player {i} (Hitter)")
+    st.subheader(f"Position {i}")
     
     # Input fields stacked vertically
-    player = st.selectbox(f"Select Player {i}", hitters_names, key=f"hitter_{i}_player")
-    season = st.selectbox(f"Select Year for Player {i}", seasons, key=f"hitter_{i}_season")
-    position = st.selectbox(f"Select Position for Player {i}", positions_hitter, key=f"hitter_{i}_position")
+    player = st.selectbox(f"Select Player for Position {i}", hitters_names, key=f"hitter_{i}_player")
+    season = st.selectbox(f"Select Year for Position {i}", seasons, key=f"hitter_{i}_season")
+    position = st.selectbox(f"Select Position for Position {i}", positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -43,12 +43,12 @@ for i in range(1, 10):
 st.header("Pitching Lineup")
 pitching_lineup = []
 for i in range(1, 6):
-    st.subheader(f"Player {i} (Pitcher)")
+    st.subheader(f"Pitcher {i}")
     
     # Input fields stacked vertically
-    player = st.selectbox(f"Select Player {i}", pitchers_names, key=f"pitcher_{i}_player")
-    season = st.selectbox(f"Select Year for Player {i}", seasons, key=f"pitcher_{i}_season")
-    position = st.selectbox(f"Select Role for Player {i}", positions_pitcher, key=f"pitcher_{i}_position")
+    player = st.selectbox(f"Select Player for Pitcher {i}", pitchers_names, key=f"pitcher_{i}_player")
+    season = st.selectbox(f"Select Year for Pitcher {i}", seasons, key=f"pitcher_{i}_season")
+    position = st.selectbox(f"Select Role for Pitcher {i}", positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
