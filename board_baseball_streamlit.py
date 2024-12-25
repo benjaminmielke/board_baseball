@@ -84,7 +84,7 @@ if st.button("Generate Lineup"):
     # Create a DataFrame for easier formatting and display
     hitter_df = pd.DataFrame(hitter_stats)
 
-    # Convert the DataFrame to HTML with left-alignment for text
+    # Convert the DataFrame to HTML with left-alignment for text and uniform cell width
     st.markdown(
         f"""
         <style>
@@ -96,9 +96,13 @@ if st.button("Generate Lineup"):
                 padding: 8px;
                 text-align: left;
                 border: 1px solid #ddd;
+                width: 14%;  /* Ensures all columns have equal width */
             }}
             th {{
-                background-color: #f4f4f4;
+                background-color: #f4f4f4;  /* Light grey header background */
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;  /* Light background for even rows */
             }}
         </style>
         <table>
@@ -131,7 +135,7 @@ if st.button("Generate Lineup"):
 
     st.markdown("</tbody></table>", unsafe_allow_html=True)
 
-    # Display pitching lineup in a compact table with left-aligned text
+    # Display pitching lineup in a compact table with left-aligned text and uniform cell width
     st.write("### Pitching Lineup")
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
@@ -159,7 +163,7 @@ if st.button("Generate Lineup"):
     # Create a DataFrame for easier formatting and display
     pitcher_df = pd.DataFrame(pitcher_stats)
 
-    # Convert the DataFrame to HTML with left-alignment for text
+    # Convert the DataFrame to HTML with left-alignment for text and uniform cell width
     st.markdown(
         f"""
         <style>
@@ -171,9 +175,13 @@ if st.button("Generate Lineup"):
                 padding: 8px;
                 text-align: left;
                 border: 1px solid #ddd;
+                width: 14%;  /* Ensures all columns have equal width */
             }}
             th {{
-                background-color: #f4f4f4;
+                background-color: #f4f4f4;  /* Light grey header background */
+            }}
+            tr:nth-child(even) {{
+                background-color: #f9f9f9;  /* Light background for even rows */
             }}
         </style>
         <table>
