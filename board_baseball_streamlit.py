@@ -56,7 +56,7 @@ for i in range(1, 6):
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
-    # Display hitting lineup in a compact table with left-aligned text
+    # Display hitting lineup in the default Streamlit table
     st.write("### Hitting Lineup")
     hitter_stats = []
     for i, hitter in enumerate(hitting_lineup, 1):
@@ -84,58 +84,10 @@ if st.button("Generate Lineup"):
     # Create a DataFrame for easier formatting and display
     hitter_df = pd.DataFrame(hitter_stats)
 
-    # Convert the DataFrame to HTML with left-alignment for text and uniform cell width
-    st.markdown(
-        f"""
-        <style>
-            table {{
-                width: 100%;
-                border-collapse: collapse;
-            }}
-            th, td {{
-                padding: 8px;
-                text-align: left;
-                border: 1px solid #ddd;
-                width: 14%;  /* Ensures all columns have equal width */
-            }}
-            th {{
-                background-color: #f4f4f4;  /* Light grey header background */
-            }}
-            tr:nth-child(even) {{
-                background-color: #f9f9f9;  /* Light background for even rows */
-            }}
-        </style>
-        <table>
-            <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>Player</th>
-                    <th>Year</th>
-                    <th>Position</th>
-                    <th>BA</th>
-                    <th>HR</th>
-                    <th>H</th>
-                </tr>
-            </thead>
-            <tbody>
-    """, unsafe_allow_html=True)
+    # Display the table using Streamlit's built-in table function
+    st.table(hitter_df)
 
-    for row in hitter_stats:
-        st.markdown(f"""
-            <tr>
-                <td>{row['Index']}</td>
-                <td>{row['Player']}</td>
-                <td>{row['Year']}</td>
-                <td>{row['Position']}</td>
-                <td>{row.get('BA', 'N/A')}</td>
-                <td>{row.get('HR', 'N/A')}</td>
-                <td>{row.get('H', 'N/A')}</td>
-            </tr>
-        """, unsafe_allow_html=True)
-
-    st.markdown("</tbody></table>", unsafe_allow_html=True)
-
-    # Display pitching lineup in a compact table with left-aligned text and uniform cell width
+    # Display pitching lineup in the default Streamlit table
     st.write("### Pitching Lineup")
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
@@ -163,53 +115,5 @@ if st.button("Generate Lineup"):
     # Create a DataFrame for easier formatting and display
     pitcher_df = pd.DataFrame(pitcher_stats)
 
-    # Convert the DataFrame to HTML with left-alignment for text and uniform cell width
-    st.markdown(
-        f"""
-        <style>
-            table {{
-                width: 100%;
-                border-collapse: collapse;
-            }}
-            th, td {{
-                padding: 8px;
-                text-align: left;
-                border: 1px solid #ddd;
-                width: 14%;  /* Ensures all columns have equal width */
-            }}
-            th {{
-                background-color: #f4f4f4;  /* Light grey header background */
-            }}
-            tr:nth-child(even) {{
-                background-color: #f9f9f9;  /* Light background for even rows */
-            }}
-        </style>
-        <table>
-            <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>Player</th>
-                    <th>Year</th>
-                    <th>Position</th>
-                    <th>W</th>
-                    <th>ERA</th>
-                    <th>SO</th>
-                </tr>
-            </thead>
-            <tbody>
-    """, unsafe_allow_html=True)
-
-    for row in pitcher_stats:
-        st.markdown(f"""
-            <tr>
-                <td>{row['Index']}</td>
-                <td>{row['Player']}</td>
-                <td>{row['Year']}</td>
-                <td>{row['Position']}</td>
-                <td>{row.get('W', 'N/A')}</td>
-                <td>{row.get('ERA', 'N/A')}</td>
-                <td>{row.get('SO', 'N/A')}</td>
-            </tr>
-        """, unsafe_allow_html=True)
-
-    st.markdown("</tbody></table>", unsafe_allow_html=True)
+    # Display the table using Streamlit's built-in table function
+    st.table(pitcher_df)
