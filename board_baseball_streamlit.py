@@ -76,7 +76,7 @@ def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA,
 # Function to convert dataframe to image
 def dataframe_to_image(df):
     # Create a white canvas
-    img_width = 1500  # Increased width to fit all columns
+    img_width = 1000
     img_height = 50 + len(df) * 40  # Height adjusts based on the number of rows
     img = Image.new('RGB', (img_width, img_height), color=(255, 255, 255))
     
@@ -97,7 +97,7 @@ def dataframe_to_image(df):
     # Draw column headers
     for col in columns:
         draw.text((x_pos, y_pos), col, font=font, fill=(0, 0, 0))
-        x_pos += 250  # Space between columns (increased space for readability)
+        x_pos += 180  # Space between columns
     
     # Draw row values
     y_pos = 40  # Start drawing rows after headers
@@ -105,7 +105,7 @@ def dataframe_to_image(df):
         x_pos = 10
         for val in row:
             draw.text((x_pos, y_pos), str(val), font=font, fill=(0, 0, 0))
-            x_pos += 250  # Space between columns
+            x_pos += 180  # Space between columns
         y_pos += 40  # Move to the next row
     
     return img
@@ -146,26 +146,35 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
+    # Custom colored header for hitting lineup (yellow)
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
+    
+    # Input fields stacked vertically
     player = st.selectbox(f"Select Player for Hitter {i}", hitters_names, key=f"hitter_{i}_player")
     season = st.selectbox(f"Select Year for Hitter {i}", seasons, key=f"hitter_{i}_season")
     position = st.selectbox(f"Select Position for Hitter {i}", positions_hitter, key=f"hitter_{i}_position")
+    
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
 # Create input fields for pitchers
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
+    # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
+    
+    # Input fields stacked vertically
     player = st.selectbox(f"Select Player for Pitcher {i}", pitchers_names, key=f"pitcher_{i}_player")
     season = st.selectbox(f"Select Year for Pitcher {i}", seasons, key=f"pitcher_{i}_season")
     position = st.selectbox(f"Select Role for Pitcher {i}", positions_pitcher, key=f"pitcher_{i}_position")
+    
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
 # Button to generate the lineup
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
+    # Display team name if provided
     if team_name:
         st.write(f"### Team: {team_name}")
     else:
@@ -218,6 +227,9 @@ if st.button("Generate Lineup"):
 
     hitter_df = pd.DataFrame(hitter_stats)
 
+    # Display the table using Streamlit's built-in table function
+    st.table(hitter_df)
+
     # Display pitching lineup in a simple table format
     st.write("### Pitching Rotation")
     pitcher_stats = []
@@ -263,8 +275,11 @@ if st.button("Generate Lineup"):
 
     pitcher_df = pd.DataFrame(pitcher_stats)
 
-    # Combine hitting and pitching dataframes, ensuring consistent columns
-    combined_df = pd.concat([hitter_df, pitcher_df], ignore_index=True, sort=False)
+    # Display the table using Streamlit's built-in table function
+    st.table(pitcher_df)
+
+    # Combine hitting and pitching dataframes
+    combined_df = pd.concat([hitter_df, pitcher_df], ignore_index=True)
 
     # Convert dataframe to image
     img = dataframe_to_image(combined_df)
