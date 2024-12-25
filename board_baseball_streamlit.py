@@ -17,6 +17,10 @@ pitchers_file = 'pitchers_stats.csv'
 hitters_data = load_data(hitters_file)
 pitchers_data = load_data(pitchers_file)
 
+# Print columns to debug and inspect the available stats
+st.write("Hitters data columns:", hitters_data.columns)
+st.write("Pitchers data columns:", pitchers_data.columns)
+
 # Extract player names and seasons for the dropdowns
 hitters_names = sorted(hitters_data['Name'].unique())  # Updated column name
 pitchers_names = sorted(pitchers_data['Name'].unique())  # Updated column name
@@ -63,15 +67,23 @@ if st.button("Generate Lineup"):
         player_stats = hitters_data[
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
-        hitter_stats.append({
+        
+        # Check the available columns and adjust accordingly
+        stats = {
             'Player': hitter['Player'],
             'Position': hitter['Position'],
-            'BA': player_stats['BA'].values[0],  # Show key stats like BA, HR, RBI
-            'HR': player_stats['HR'].values[0],
-            'RBI': player_stats['RBI'].values[0]
-        })
-    
-    # Display in a table format (compact)
+        }
+
+        if 'BA' in player_stats.columns:
+            stats['BA'] = player_stats['BA'].values[0]
+        if 'HR' in player_stats.columns:
+            stats['HR'] = player_stats['HR'].values[0]
+        if 'H' in player_stats.columns:
+            stats['H'] = player_stats['H'].values[0]
+
+        hitter_stats.append(stats)
+
+    # Display the hitters' stats in a table format (compact)
     st.table(hitter_stats)
 
     # Display pitching lineup in a compact table
@@ -81,13 +93,21 @@ if st.button("Generate Lineup"):
         player_stats = pitchers_data[
             (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
         ]
-        pitcher_stats.append({
+        
+        # Check the available columns and adjust accordingly
+        stats = {
             'Player': pitcher['Player'],
             'Position': pitcher['Position'],
-            'W': player_stats['W'].values[0],  # Show key stats like W, ERA, SO
-            'ERA': player_stats['ERA'].values[0],
-            'SO': player_stats['SO'].values[0]
-        })
+        }
 
-    # Display in a table format (compact)
+        if 'W' in player_stats.columns:
+            stats['W'] = player_stats['W'].values[0]
+        if 'ERA' in player_stats.columns:
+            stats['ERA'] = player_stats['ERA'].values[0]
+        if 'SO' in player_stats.columns:
+            stats['SO'] = player_stats['SO'].values[0]
+
+        pitcher_stats.append(stats)
+
+    # Display the pitchers' stats in a table format (compact)
     st.table(pitcher_stats)
