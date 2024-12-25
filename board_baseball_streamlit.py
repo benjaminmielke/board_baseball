@@ -104,32 +104,46 @@ if st.button("Generate Lineup"):
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
         
-        # Calculate metrics for the hitter
-        metrics = calculate_hitter_metrics(
-            hitter['Player'],
-            hitter['Position'],
-            hitter['Year'],
-            player_stats['H'].values[0],
-            player_stats['2B'].values[0],
-            player_stats['3B'].values[0],
-            player_stats['HR'].values[0],
-            player_stats['BB'].values[0],
-            player_stats['SB'].values[0],
-            player_stats['BA'].values[0]
-        )
-        
-        # Collect metrics and player info
-        stats = {
-            'Index': i,
-            'Player': hitter['Player'],
-            'Year': hitter['Year'],
-            'Position': hitter['Position'],
-            'Hitter Boost': metrics['Hitter Boost'],
-            'Dice Row': metrics['Dice Row'],
-            'Stealing': metrics['Stealing'],
-        }
+        # Check if player stats exist
+        if not player_stats.empty:
+            # Calculate metrics for the hitter
+            metrics = calculate_hitter_metrics(
+                hitter['Player'],
+                hitter['Position'],
+                hitter['Year'],
+                player_stats['H'].values[0],
+                player_stats['2B'].values[0],
+                player_stats['3B'].values[0],
+                player_stats['HR'].values[0],
+                player_stats['BB'].values[0],
+                player_stats['SB'].values[0],
+                player_stats['BA'].values[0]
+            )
+            
+            # Collect metrics and player info
+            stats = {
+                'Index': i,
+                'Player': hitter['Player'],
+                'Year': hitter['Year'],
+                'Position': hitter['Position'],
+                'Hitter Boost': metrics['Hitter Boost'],
+                'Dice Row': metrics['Dice Row'],
+                'Stealing': metrics['Stealing'],
+            }
 
-        hitter_stats.append(stats)
+            hitter_stats.append(stats)
+        else:
+            # Handle the case when no stats are found for the player
+            stats = {
+                'Index': i,
+                'Player': hitter['Player'],
+                'Year': hitter['Year'],
+                'Position': hitter['Position'],
+                'Hitter Boost': 'N/A',
+                'Dice Row': 'N/A',
+                'Stealing': 'N/A',
+            }
+            hitter_stats.append(stats)
 
     # Create a DataFrame for easier formatting and display
     hitter_df = pd.DataFrame(hitter_stats)
@@ -145,30 +159,44 @@ if st.button("Generate Lineup"):
             (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
         ]
         
-        # Calculate metrics for the pitcher
-        metrics = calculate_pitcher_metrics(
-            pitcher['Player'],
-            pitcher['Position'],
-            pitcher['Year'],
-            player_stats['ERA'].values[0],
-            player_stats['G'].values[0],
-            player_stats['IP'].values[0],
-            player_stats['SO'].values[0],
-            player_stats['BB'].values[0]
-        )
-        
-        # Collect metrics and player info
-        stats = {
-            'Index': i,
-            'Player': pitcher['Player'],
-            'Year': pitcher['Year'],
-            'Position': pitcher['Position'],
-            'Pitcher Decrease': metrics['Pitcher Decrease'],
-            'Dice Row': metrics['Dice Row'],
-            'Endurance': metrics['Endurance'],
-        }
+        # Check if player stats exist
+        if not player_stats.empty:
+            # Calculate metrics for the pitcher
+            metrics = calculate_pitcher_metrics(
+                pitcher['Player'],
+                pitcher['Position'],
+                pitcher['Year'],
+                player_stats['ERA'].values[0],
+                player_stats['G'].values[0],
+                player_stats['IP'].values[0],
+                player_stats['SO'].values[0],
+                player_stats['BB'].values[0]
+            )
+            
+            # Collect metrics and player info
+            stats = {
+                'Index': i,
+                'Player': pitcher['Player'],
+                'Year': pitcher['Year'],
+                'Position': pitcher['Position'],
+                'Pitcher Decrease': metrics['Pitcher Decrease'],
+                'Dice Row': metrics['Dice Row'],
+                'Endurance': metrics['Endurance'],
+            }
 
-        pitcher_stats.append(stats)
+            pitcher_stats.append(stats)
+        else:
+            # Handle the case when no stats are found for the player
+            stats = {
+                'Index': i,
+                'Player': pitcher['Player'],
+                'Year': pitcher['Year'],
+                'Position': pitcher['Position'],
+                'Pitcher Decrease': 'N/A',
+                'Dice Row': 'N/A',
+                'Endurance': 'N/A',
+            }
+            pitcher_stats.append(stats)
 
     # Create a DataFrame for easier formatting and display
     pitcher_df = pd.DataFrame(pitcher_stats)
