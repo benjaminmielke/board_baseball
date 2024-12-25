@@ -70,6 +70,7 @@ if st.button("Generate Lineup"):
         
         # Check the available columns and adjust accordingly
         stats = {
+            'Index': i,  # Added index starting from 1
             'Player': hitter['Player'],
             'Year': hitter['Year'],  # Added Year to the stats
             'Position': hitter['Position'],
@@ -97,6 +98,7 @@ if st.button("Generate Lineup"):
         
         # Check the available columns and adjust accordingly
         stats = {
+            'Index': i,  # Added index starting from 1
             'Player': pitcher['Player'],
             'Year': pitcher['Year'],  # Added Year to the stats
             'Position': pitcher['Position'],
