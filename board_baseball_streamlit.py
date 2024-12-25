@@ -30,12 +30,13 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    st.subheader(f"Position {i}")
+    # Custom colored header for hitting lineup
+    st.markdown(f"<h4 style='color: blue;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
     # Input fields stacked vertically
-    player = st.selectbox(f"Select Player for Position {i}", hitters_names, key=f"hitter_{i}_player")
-    season = st.selectbox(f"Select Year for Position {i}", seasons, key=f"hitter_{i}_season")
-    position = st.selectbox(f"Select Position for Position {i}", positions_hitter, key=f"hitter_{i}_position")
+    player = st.selectbox(f"Select Player for Hitter {i}", hitters_names, key=f"hitter_{i}_player")
+    season = st.selectbox(f"Select Year for Hitter {i}", seasons, key=f"hitter_{i}_season")
+    position = st.selectbox(f"Select Position for Hitter {i}", positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -43,7 +44,8 @@ for i in range(1, 10):
 st.header("Pitching Lineup")
 pitching_lineup = []
 for i in range(1, 6):
-    st.subheader(f"Pitcher {i}")
+    # Custom colored header for pitching lineup
+    st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
     # Input fields stacked vertically
     player = st.selectbox(f"Select Player for Pitcher {i}", pitchers_names, key=f"pitcher_{i}_player")
