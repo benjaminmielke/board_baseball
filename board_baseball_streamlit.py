@@ -30,8 +30,8 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    # Custom colored header for hitting lineup
-    st.markdown(f"<h4 style='color: blue;'>Hitter {i}</h4>", unsafe_allow_html=True)
+    # Custom colored header for hitting lineup (yellow)
+    st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
     # Input fields stacked vertically
     player = st.selectbox(f"Select Player for Hitter {i}", hitters_names, key=f"hitter_{i}_player")
@@ -41,10 +41,10 @@ for i in range(1, 10):
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
 # Create input fields for pitchers
-st.header("Pitching Lineup")
+st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
-    # Custom colored header for pitching lineup
+    # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
     # Input fields stacked vertically
@@ -90,7 +90,7 @@ if st.button("Generate Lineup"):
     st.table(hitter_df)
 
     # Display pitching lineup in a simple table format
-    st.write("### Pitching Lineup")
+    st.write("### Pitching Rotation")
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
         player_stats = pitchers_data[
