@@ -30,15 +30,12 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    # Use columns for layout
-    col1, col2, col3 = st.columns([1, 1, 1])  # Distribute columns equally
+    st.subheader(f"Player {i} (Hitter)")
     
-    with col1:
-        player = st.selectbox(f"Player {i} (Hitter)", hitters_names, key=f"hitter_{i}_player")
-    with col2:
-        season = st.selectbox(f"Year for Player {i}", seasons, key=f"hitter_{i}_season")
-    with col3:
-        position = st.selectbox(f"Position for Player {i}", positions_hitter, key=f"hitter_{i}_position")
+    # Input fields stacked vertically
+    player = st.selectbox(f"Select Player {i}", hitters_names, key=f"hitter_{i}_player")
+    season = st.selectbox(f"Select Year for Player {i}", seasons, key=f"hitter_{i}_season")
+    position = st.selectbox(f"Select Position for Player {i}", positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -46,15 +43,12 @@ for i in range(1, 10):
 st.header("Pitching Lineup")
 pitching_lineup = []
 for i in range(1, 6):
-    # Use columns for layout
-    col1, col2, col3 = st.columns([1, 1, 1])  # Distribute columns equally
+    st.subheader(f"Player {i} (Pitcher)")
     
-    with col1:
-        player = st.selectbox(f"Player {i} (Pitcher)", pitchers_names, key=f"pitcher_{i}_player")
-    with col2:
-        season = st.selectbox(f"Year for Player {i}", seasons, key=f"pitcher_{i}_season")
-    with col3:
-        position = st.selectbox(f"Role for Player {i}", positions_pitcher, key=f"pitcher_{i}_position")
+    # Input fields stacked vertically
+    player = st.selectbox(f"Select Player {i}", pitchers_names, key=f"pitcher_{i}_player")
+    season = st.selectbox(f"Select Year for Player {i}", seasons, key=f"pitcher_{i}_season")
+    position = st.selectbox(f"Select Role for Player {i}", positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -62,7 +56,7 @@ for i in range(1, 6):
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
-    # Display hitting lineup in the default Streamlit table
+    # Display hitting lineup in a simple table format
     st.write("### Hitting Lineup")
     hitter_stats = []
     for i, hitter in enumerate(hitting_lineup, 1):
@@ -70,7 +64,7 @@ if st.button("Generate Lineup"):
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
         
-        # Check the available columns and adjust accordingly
+        # Collect stats for the player
         stats = {
             'Index': i,  # Added index starting from 1
             'Player': hitter['Player'],
@@ -79,47 +73,4 @@ if st.button("Generate Lineup"):
         }
 
         if 'BA' in player_stats.columns:
-            stats['BA'] = player_stats['BA'].values[0]
-        if 'HR' in player_stats.columns:
-            stats['HR'] = player_stats['HR'].values[0]
-        if 'H' in player_stats.columns:
-            stats['H'] = player_stats['H'].values[0]
-
-        hitter_stats.append(stats)
-
-    # Create a DataFrame for easier formatting and display
-    hitter_df = pd.DataFrame(hitter_stats)
-
-    # Display the table using Streamlit's built-in table function
-    st.table(hitter_df)
-
-    # Display pitching lineup in the default Streamlit table
-    st.write("### Pitching Lineup")
-    pitcher_stats = []
-    for i, pitcher in enumerate(pitching_lineup, 1):
-        player_stats = pitchers_data[
-            (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
-        ]
-        
-        # Check the available columns and adjust accordingly
-        stats = {
-            'Index': i,  # Added index starting from 1
-            'Player': pitcher['Player'],
-            'Year': pitcher['Year'],  # Added Year to the stats
-            'Position': pitcher['Position'],
-        }
-
-        if 'W' in player_stats.columns:
-            stats['W'] = player_stats['W'].values[0]
-        if 'ERA' in player_stats.columns:
-            stats['ERA'] = player_stats['ERA'].values[0]
-        if 'SO' in player_stats.columns:
-            stats['SO'] = player_stats['SO'].values[0]
-
-        pitcher_stats.append(stats)
-
-    # Create a DataFrame for easier formatting and display
-    pitcher_df = pd.DataFrame(pitcher_stats)
-
-    # Display the table using Streamlit's built-in table function
-    st.table(pitcher_df)
+            stats['
