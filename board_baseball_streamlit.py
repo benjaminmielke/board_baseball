@@ -9,14 +9,41 @@ def load_data(file_path):
 
 # Hitter Metrics Calculation
 def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Double, Triple, HR, BB_H, SB, AVG):
-    hitter_boost = math.floor(float(AVG) * 100)
-    hitter_dice_row = math.floor(((int(Double) + int(Triple) + int(HR)) / int(H)) * 10)
-    stealing = math.floor((int(SB) / (int(H) + int(BB_H))) * 100)
-    if stealing >= 5:
-        stealing = "Yes"
+    # Convert the input values to numeric, coercing errors (invalid values will become NaN)
+    H = pd.to_numeric(H, errors='coerce')
+    Double = pd.to_numeric(Double, errors='coerce')
+    Triple = pd.to_numeric(Triple, errors='coerce')
+    HR = pd.to_numeric(HR, errors='coerce')
+    BB_H = pd.to_numeric(BB_H, errors='coerce')
+    SB = pd.to_numeric(SB, errors='coerce')
+    AVG = pd.to_numeric(AVG, errors='coerce')
+
+    # Handle NaN values by setting them to 0 if they are invalid
+    H = H if pd.notna(H) else 0
+    Double = Double if pd.notna(Double) else 0
+    Triple = Triple if pd.notna(Triple) else 0
+    HR = HR if pd.notna(HR) else 0
+    BB_H = BB_H if pd.notna(BB_H) else 0
+    SB = SB if pd.notna(SB) else 0
+    AVG = AVG if pd.notna(AVG) else 0
+
+    # Calculate Hitter Boost
+    hitter_boost = math.floor(AVG * 100)
+
+    # Calculate Dice Row based on the formula
+    if H != 0:  # Avoid division by zero
+        hitter_dice_row = math.floor(((Double + Triple + HR) / H) * 10)
     else:
-        stealing = "No"
-    
+        hitter_dice_row = 0
+
+    # Calculate Stealing based on the formula
+    if (H + BB_H) != 0:  # Avoid division by zero
+        stealing = math.floor((SB / (H + BB_H)) * 100)
+    else:
+        stealing = 0
+
+    stealing = "Yes" if stealing >= 5 else "No"
+
     return {
         'Hitter Boost': hitter_boost,
         'Dice Row': hitter_dice_row,
@@ -25,10 +52,29 @@ def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Doubl
 
 # Pitcher Metrics Calculation
 def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA, G, IP, SO, BB_P):
-    pitcher_decrease = -(math.floor(float(ERA) * 10)) + 20
-    pitcher_dice_row = math.floor(int(SO) / int(BB_P))
-    endurance = math.ceil(float(IP) / int(G))
-    
+    # Convert the input values to numeric, coercing errors (invalid values will become NaN)
+    ERA = pd.to_numeric(ERA, errors='coerce')
+    G = pd.to_numeric(G, errors='coerce')
+    IP = pd.to_numeric(IP, errors='coerce')
+    SO = pd.to_numeric(SO, errors='coerce')
+    BB_P = pd.to_numeric(BB_P, errors='coerce')
+
+    # Handle NaN values by setting them to 0 if they are invalid
+    ERA = ERA if pd.notna(ERA) else 0
+    G = G if pd.notna(G) else 0
+    IP = IP if pd.notna(IP) else 0
+    SO = SO if pd.notna(SO) else 0
+    BB_P = BB_P if pd.notna(BB_P) else 0
+
+    # Calculate Pitcher Decrease based on the formula
+    pitcher_decrease = -(math.floor(ERA * 10)) + 20
+
+    # Calculate Dice Row based on the formula
+    pitcher_dice_row = math.floor(SO / BB_P) if BB_P != 0 else 0
+
+    # Calculate Endurance based on the formula
+    endurance = math.ceil(IP / G) if G != 0 else 0
+
     return {
         'Pitcher Decrease': pitcher_decrease,
         'Dice Row': pitcher_dice_row,
