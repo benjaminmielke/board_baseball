@@ -75,7 +75,7 @@ if st.button("Generate Lineup"):
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
         
-        # Collect stats for the player
+        # Collect all stats for the player
         stats = {
             'Index': i,  # Added index starting from 1
             'Player': hitter['Player'],
@@ -83,12 +83,9 @@ if st.button("Generate Lineup"):
             'Position': hitter['Position'],
         }
 
-        if 'BA' in player_stats.columns:
-            stats['BA'] = player_stats['BA'].values[0]
-        if 'HR' in player_stats.columns:
-            stats['HR'] = player_stats['HR'].values[0]
-        if 'H' in player_stats.columns:
-            stats['H'] = player_stats['H'].values[0]
+        for column in ['BA', 'H', '2B', '3B', 'HR', 'BB', 'SB']:
+            if column in player_stats.columns:
+                stats[column] = player_stats[column].values[0]
 
         hitter_stats.append(stats)
 
@@ -106,7 +103,7 @@ if st.button("Generate Lineup"):
             (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
         ]
         
-        # Collect stats for the player
+        # Collect all stats for the player
         stats = {
             'Index': i,  # Added index starting from 1
             'Player': pitcher['Player'],
@@ -114,12 +111,9 @@ if st.button("Generate Lineup"):
             'Position': pitcher['Position'],
         }
 
-        if 'W' in player_stats.columns:
-            stats['W'] = player_stats['W'].values[0]
-        if 'ERA' in player_stats.columns:
-            stats['ERA'] = player_stats['ERA'].values[0]
-        if 'SO' in player_stats.columns:
-            stats['SO'] = player_stats['SO'].values[0]
+        for column in ['ERA', 'BB', 'SO', 'G', 'IP']:
+            if column in player_stats.columns:
+                stats[column] = player_stats[column].values[0]
 
         pitcher_stats.append(stats)
 
