@@ -1,10 +1,24 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Load the CSV file based on input type (hitters or pitchers)
 @st.cache
 def load_data(file_path):
     return pd.read_csv(file_path)
+
+# Function to save DataFrame as an image
+def save_dataframe_as_image(df, image_path):
+    fig, ax = plt.subplots(figsize=(12, 4))  # Specify the size of the figure
+    ax.axis('tight')
+    ax.axis('off')
+    
+    # Render the dataframe as a table
+    table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='center', colColours=["#f5f5f5"]*len(df.columns))
+
+    # Save the figure as an image file
+    plt.savefig(image_path, bbox_inches='tight', pad_inches=0.05)
 
 # App starts here
 st.title("Board Baseball Lineup Created")
@@ -67,8 +81,7 @@ if st.button("Generate Lineup"):
     else:
         st.write("### Team: [No team name provided]")
 
-    # Display hitting lineup in a simple table format
-    st.write("### Hitting Lineup")
+    # Prepare Hitting Lineup
     hitter_stats = []
     for i, hitter in enumerate(hitting_lineup, 1):
         player_stats = hitters_data[
@@ -92,14 +105,11 @@ if st.button("Generate Lineup"):
 
         hitter_stats.append(stats)
 
-    # Create a DataFrame for easier formatting and display
+    # Create a DataFrame for hitting lineup
     hitter_df = pd.DataFrame(hitter_stats)
-
-    # Display the table using Streamlit's built-in table function
     st.table(hitter_df)
 
-    # Display pitching lineup in a simple table format
-    st.write("### Pitching Rotation")
+    # Prepare Pitching Rotation
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
         player_stats = pitchers_data[
@@ -123,8 +133,12 @@ if st.button("Generate Lineup"):
 
         pitcher_stats.append(stats)
 
-    # Create a DataFrame for easier formatting and display
+    # Create a DataFrame for pitching rotation
     pitcher_df = pd.DataFrame(pitcher_stats)
-
-    # Display the table using Streamlit's built-in table function
     st.table(pitcher_df)
+
+    # Save both lineups as images
+    save_dataframe_as_image(hitter_df, "hitting_lineup.png")
+    save_dataframe_as_image(pitcher_df, "pitching_rotation.png")
+
+    st.write("### Lineups saved as images!")
