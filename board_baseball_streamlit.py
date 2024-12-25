@@ -56,20 +56,38 @@ for i in range(1, 6):
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
-    # Create and display hitting lineup
+    # Display hitting lineup in a compact table
     st.write("### Hitting Lineup")
+    hitter_stats = []
     for i, hitter in enumerate(hitting_lineup, 1):
         player_stats = hitters_data[
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
-        st.write(f"{i}. {hitter['Player']} ({hitter['Position']} - {hitter['Year']})")
-        st.dataframe(player_stats)
+        hitter_stats.append({
+            'Player': hitter['Player'],
+            'Position': hitter['Position'],
+            'BA': player_stats['BA'].values[0],  # Show key stats like BA, HR, RBI
+            'HR': player_stats['HR'].values[0],
+            'RBI': player_stats['RBI'].values[0]
+        })
+    
+    # Display in a table format (compact)
+    st.table(hitter_stats)
 
-    # Create and display pitching lineup
+    # Display pitching lineup in a compact table
     st.write("### Pitching Lineup")
+    pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
         player_stats = pitchers_data[
             (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
         ]
-        st.write(f"{i}. {pitcher['Player']} ({pitcher['Position']} - {pitcher['Year']})")
-        st.dataframe(player_stats)
+        pitcher_stats.append({
+            'Player': pitcher['Player'],
+            'Position': pitcher['Position'],
+            'W': player_stats['W'].values[0],  # Show key stats like W, ERA, SO
+            'ERA': player_stats['ERA'].values[0],
+            'SO': player_stats['SO'].values[0]
+        })
+
+    # Display in a table format (compact)
+    st.table(pitcher_stats)
