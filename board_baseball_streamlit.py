@@ -73,4 +73,47 @@ if st.button("Generate Lineup"):
         }
 
         if 'BA' in player_stats.columns:
-            stats['
+            stats['BA'] = player_stats['BA'].values[0]
+        if 'HR' in player_stats.columns:
+            stats['HR'] = player_stats['HR'].values[0]
+        if 'H' in player_stats.columns:
+            stats['H'] = player_stats['H'].values[0]
+
+        hitter_stats.append(stats)
+
+    # Create a DataFrame for easier formatting and display
+    hitter_df = pd.DataFrame(hitter_stats)
+
+    # Display the table using Streamlit's built-in table function
+    st.table(hitter_df)
+
+    # Display pitching lineup in a simple table format
+    st.write("### Pitching Lineup")
+    pitcher_stats = []
+    for i, pitcher in enumerate(pitching_lineup, 1):
+        player_stats = pitchers_data[
+            (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
+        ]
+        
+        # Collect stats for the player
+        stats = {
+            'Index': i,  # Added index starting from 1
+            'Player': pitcher['Player'],
+            'Year': pitcher['Year'],  # Added Year to the stats
+            'Position': pitcher['Position'],
+        }
+
+        if 'W' in player_stats.columns:
+            stats['W'] = player_stats['W'].values[0]
+        if 'ERA' in player_stats.columns:
+            stats['ERA'] = player_stats['ERA'].values[0]
+        if 'SO' in player_stats.columns:
+            stats['SO'] = player_stats['SO'].values[0]
+
+        pitcher_stats.append(stats)
+
+    # Create a DataFrame for easier formatting and display
+    pitcher_df = pd.DataFrame(pitcher_stats)
+
+    # Display the table using Streamlit's built-in table function
+    st.table(pitcher_df)
