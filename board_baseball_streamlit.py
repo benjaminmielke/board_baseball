@@ -1,10 +1,39 @@
 import streamlit as st
 import pandas as pd
+import math
 
 # Load the CSV file based on input type (hitters or pitchers)
 @st.cache
 def load_data(file_path):
     return pd.read_csv(file_path)
+
+# Hitter Metrics Calculation
+def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Double, Triple, HR, BB_H, SB, AVG):
+    hitter_boost = math.floor(float(AVG) * 100)
+    hitter_dice_row = math.floor(((int(Double) + int(Triple) + int(HR)) / int(H)) * 10)
+    stealing = math.floor((int(SB) / (int(H) + int(BB_H))) * 100)
+    if stealing >= 5:
+        stealing = "Yes"
+    else:
+        stealing = "No"
+    
+    return {
+        'Hitter Boost': hitter_boost,
+        'Dice Row': hitter_dice_row,
+        'Stealing': stealing,
+    }
+
+# Pitcher Metrics Calculation
+def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA, G, IP, SO, BB_P):
+    pitcher_decrease = -(math.floor(float(ERA) * 10)) + 20
+    pitcher_dice_row = math.floor(int(SO) / int(BB_P))
+    endurance = math.ceil(float(IP) / int(G))
+    
+    return {
+        'Pitcher Decrease': pitcher_decrease,
+        'Dice Row': pitcher_dice_row,
+        'Endurance': endurance,
+    }
 
 # App starts here
 st.title("Board Baseball Lineup Created")
@@ -75,17 +104,30 @@ if st.button("Generate Lineup"):
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
         
-        # Collect all stats for the player
+        # Calculate metrics for the hitter
+        metrics = calculate_hitter_metrics(
+            hitter['Player'],
+            hitter['Position'],
+            hitter['Year'],
+            player_stats['H'].values[0],
+            player_stats['2B'].values[0],
+            player_stats['3B'].values[0],
+            player_stats['HR'].values[0],
+            player_stats['BB'].values[0],
+            player_stats['SB'].values[0],
+            player_stats['BA'].values[0]
+        )
+        
+        # Collect metrics and player info
         stats = {
-            'Index': i,  # Added index starting from 1
+            'Index': i,
             'Player': hitter['Player'],
-            'Year': hitter['Year'],  # Added Year to the stats
+            'Year': hitter['Year'],
             'Position': hitter['Position'],
+            'Hitter Boost': metrics['Hitter Boost'],
+            'Dice Row': metrics['Dice Row'],
+            'Stealing': metrics['Stealing'],
         }
-
-        for column in ['BA', 'H', '2B', '3B', 'HR', 'BB', 'SB']:
-            if column in player_stats.columns:
-                stats[column] = player_stats[column].values[0]
 
         hitter_stats.append(stats)
 
@@ -103,17 +145,28 @@ if st.button("Generate Lineup"):
             (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
         ]
         
-        # Collect all stats for the player
+        # Calculate metrics for the pitcher
+        metrics = calculate_pitcher_metrics(
+            pitcher['Player'],
+            pitcher['Position'],
+            pitcher['Year'],
+            player_stats['ERA'].values[0],
+            player_stats['G'].values[0],
+            player_stats['IP'].values[0],
+            player_stats['SO'].values[0],
+            player_stats['BB'].values[0]
+        )
+        
+        # Collect metrics and player info
         stats = {
-            'Index': i,  # Added index starting from 1
+            'Index': i,
             'Player': pitcher['Player'],
-            'Year': pitcher['Year'],  # Added Year to the stats
+            'Year': pitcher['Year'],
             'Position': pitcher['Position'],
+            'Pitcher Decrease': metrics['Pitcher Decrease'],
+            'Dice Row': metrics['Dice Row'],
+            'Endurance': metrics['Endurance'],
         }
-
-        for column in ['ERA', 'BB', 'SO', 'G', 'IP']:
-            if column in player_stats.columns:
-                stats[column] = player_stats[column].values[0]
 
         pitcher_stats.append(stats)
 
