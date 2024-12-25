@@ -11,7 +11,6 @@ def load_data(file_path):
 
 # Hitter Metrics Calculation
 def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Double, Triple, HR, BB_H, SB, AVG):
-    # Convert the input values to numeric, coercing errors (invalid values will become NaN)
     H = pd.to_numeric(H, errors='coerce')
     Double = pd.to_numeric(Double, errors='coerce')
     Triple = pd.to_numeric(Triple, errors='coerce')
@@ -20,7 +19,6 @@ def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Doubl
     SB = pd.to_numeric(SB, errors='coerce')
     AVG = pd.to_numeric(AVG, errors='coerce')
 
-    # Handle NaN values by setting them to 0 if they are invalid
     H = H if pd.notna(H) else 0
     Double = Double if pd.notna(Double) else 0
     Triple = Triple if pd.notna(Triple) else 0
@@ -29,17 +27,14 @@ def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Doubl
     SB = SB if pd.notna(SB) else 0
     AVG = AVG if pd.notna(AVG) else 0
 
-    # Calculate Hitter Boost
     hitter_boost = math.floor(AVG * 100)
 
-    # Calculate Dice Row based on the formula
-    if H != 0:  # Avoid division by zero
+    if H != 0:
         hitter_dice_row = math.floor(((Double + Triple + HR) / H) * 10)
     else:
         hitter_dice_row = 0
 
-    # Calculate Stealing based on the formula
-    if (H + BB_H) != 0:  # Avoid division by zero
+    if (H + BB_H) != 0:
         stealing = math.floor((SB / (H + BB_H)) * 100)
     else:
         stealing = 0
@@ -54,27 +49,22 @@ def calculate_hitter_metrics(hitter_name, hitter_position, hitter_year, H, Doubl
 
 # Pitcher Metrics Calculation
 def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA, G, IP, SO, BB_P):
-    # Convert the input values to numeric, coercing errors (invalid values will become NaN)
     ERA = pd.to_numeric(ERA, errors='coerce')
     G = pd.to_numeric(G, errors='coerce')
     IP = pd.to_numeric(IP, errors='coerce')
     SO = pd.to_numeric(SO, errors='coerce')
     BB_P = pd.to_numeric(BB_P, errors='coerce')
 
-    # Handle NaN values by setting them to 0 if they are invalid
     ERA = ERA if pd.notna(ERA) else 0
     G = G if pd.notna(G) else 0
     IP = IP if pd.notna(IP) else 0
     SO = SO if pd.notna(SO) else 0
     BB_P = BB_P if pd.notna(BB_P) else 0
 
-    # Calculate Pitcher Decrease based on the formula
     pitcher_decrease = -(math.floor(ERA * 10)) + 20
 
-    # Calculate Dice Row based on the formula
     pitcher_dice_row = math.floor(SO / BB_P) if BB_P != 0 else 0
 
-    # Calculate Endurance based on the formula
     endurance = math.ceil(IP / G) if G != 0 else 0
 
     return {
@@ -86,8 +76,8 @@ def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA,
 # Function to convert dataframe to image
 def dataframe_to_image(df):
     # Create a white canvas
-    img_width = 800
-    img_height = 50 + len(df) * 30  # Height adjusts based on the number of rows
+    img_width = 1000
+    img_height = 50 + len(df) * 40  # Height adjusts based on the number of rows
     img = Image.new('RGB', (img_width, img_height), color=(255, 255, 255))
     
     # Initialize ImageDraw
@@ -99,7 +89,7 @@ def dataframe_to_image(df):
     except IOError:
         font = ImageFont.load_default()
     
-    # Define column names
+    # Define column names and column widths
     columns = df.columns
     x_pos = 10
     y_pos = 10
@@ -107,7 +97,7 @@ def dataframe_to_image(df):
     # Draw column headers
     for col in columns:
         draw.text((x_pos, y_pos), col, font=font, fill=(0, 0, 0))
-        x_pos += 140  # Space between columns
+        x_pos += 180  # Space between columns
     
     # Draw row values
     y_pos = 40  # Start drawing rows after headers
@@ -115,8 +105,8 @@ def dataframe_to_image(df):
         x_pos = 10
         for val in row:
             draw.text((x_pos, y_pos), str(val), font=font, fill=(0, 0, 0))
-            x_pos += 140  # Space between columns
-        y_pos += 30  # Move to the next row
+            x_pos += 180  # Space between columns
+        y_pos += 40  # Move to the next row
     
     return img
 
@@ -198,9 +188,7 @@ if st.button("Generate Lineup"):
             (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
         ]
         
-        # Check if player stats exist
         if not player_stats.empty:
-            # Calculate metrics for the hitter
             metrics = calculate_hitter_metrics(
                 hitter['Player'],
                 hitter['Position'],
@@ -214,7 +202,6 @@ if st.button("Generate Lineup"):
                 player_stats['BA'].values[0]
             )
             
-            # Collect metrics and player info
             stats = {
                 'Index': i,
                 'Player': hitter['Player'],
@@ -227,7 +214,6 @@ if st.button("Generate Lineup"):
 
             hitter_stats.append(stats)
         else:
-            # Handle the case when no stats are found for the player
             stats = {
                 'Index': i,
                 'Player': hitter['Player'],
@@ -239,7 +225,6 @@ if st.button("Generate Lineup"):
             }
             hitter_stats.append(stats)
 
-    # Create a DataFrame for easier formatting and display
     hitter_df = pd.DataFrame(hitter_stats)
 
     # Display the table using Streamlit's built-in table function
@@ -253,9 +238,7 @@ if st.button("Generate Lineup"):
             (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
         ]
         
-        # Check if player stats exist
         if not player_stats.empty:
-            # Calculate metrics for the pitcher
             metrics = calculate_pitcher_metrics(
                 pitcher['Player'],
                 pitcher['Position'],
@@ -267,7 +250,6 @@ if st.button("Generate Lineup"):
                 player_stats['BB'].values[0]
             )
             
-            # Collect metrics and player info
             stats = {
                 'Index': i,
                 'Player': pitcher['Player'],
@@ -280,7 +262,6 @@ if st.button("Generate Lineup"):
 
             pitcher_stats.append(stats)
         else:
-            # Handle the case when no stats are found for the player
             stats = {
                 'Index': i,
                 'Player': pitcher['Player'],
@@ -292,7 +273,6 @@ if st.button("Generate Lineup"):
             }
             pitcher_stats.append(stats)
 
-    # Create a DataFrame for easier formatting and display
     pitcher_df = pd.DataFrame(pitcher_stats)
 
     # Display the table using Streamlit's built-in table function
