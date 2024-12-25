@@ -287,10 +287,19 @@ if st.button("Generate Lineup"):
     # Save the image as PNG
     img_bytes = save_image(img)
 
-    # Provide download button
+    # Provide download button for the PNG
     st.download_button(
         label="Download Lineup as PNG",
         data=img_bytes,
         file_name="board_baseball_lineup.png",
         mime="image/png"
+    )
+
+    # Provide download button for CSV
+    csv_bytes = combined_df.to_csv(index=False).encode()  # Convert DataFrame to CSV bytes
+    st.download_button(
+        label="Download Lineup as CSV",
+        data=csv_bytes,
+        file_name="board_baseball_lineup.csv",
+        mime="text/csv"
     )
