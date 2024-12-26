@@ -85,7 +85,7 @@ def dataframe_to_image(df, header_text):
     
     # Load font (default font in case the system does not have arial)
     #try:
-    font = ImageFont.truetype("Exo2-VariableFont_wght.ttf", 25)
+    font = ImageFont.truetype("Exo2-VariableFont_wght.ttf", 20)
    # except IOError:
    #     font = ImageFont.load_default()
     
