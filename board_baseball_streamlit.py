@@ -73,52 +73,6 @@ def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA,
         'Endurance': endurance,
     }
 
-# Function to convert dataframe to image
-def dataframe_to_image(df):
-    # Create a white canvas
-    img_width = 1000
-    img_height = 50 + len(df) * 40  # Height adjusts based on the number of rows
-    img = Image.new('RGB', (img_width, img_height), color=(255, 255, 255))
-    
-    # Initialize ImageDraw
-    draw = ImageDraw.Draw(img)
-    
-    # Load font (default font in case the system does not have arial)
-    try:
-        font = ImageFont.truetype("arial.ttf", 16)
-    except IOError:
-        font = ImageFont.load_default()
-    
-    # Define column names and column widths
-    columns = df.columns
-    x_pos = 10
-    y_pos = 10
-    
-    # Draw column headers
-    for col in columns:
-        draw.text((x_pos, y_pos), col, font=font, fill=(0, 0, 0))
-        x_pos += 180  # Space between columns
-    
-    # Draw row values
-    y_pos = 40  # Start drawing rows after headers
-    for idx, row in df.iterrows():
-        x_pos = 10
-        for val in row:
-            draw.text((x_pos, y_pos), str(val), font=font, fill=(0, 0, 0))
-            x_pos += 180  # Space between columns
-        y_pos += 40  # Move to the next row
-    
-    return img
-
-# Function to save the image as a PNG file
-def save_image(img):
-    # Save the image to a BytesIO object (in-memory file)
-    img_bytes = io.BytesIO()
-    img.save(img_bytes, format='PNG')
-    img_bytes.seek(0)  # Reset pointer to the beginning of the image data
-    
-    return img_bytes
-
 # App starts here
 st.title("Board Baseball Lineup Created")
 
@@ -136,7 +90,6 @@ pitchers_data = load_data(pitchers_file)
 # Extract player names and seasons for the dropdowns
 hitters_names = sorted(hitters_data['Name'].unique())  # Updated column name
 pitchers_names = sorted(pitchers_data['Name'].unique())  # Updated column name
-seasons = sorted(hitters_data['Year'].unique())  # Assuming 'Year' is common for both datasets
 
 # Positions for hitters and pitchers
 positions_hitter = ['1B', '2B', '3B', 'SS', 'C', 'LF', 'CF', 'RF', 'DH']
@@ -149,9 +102,16 @@ for i in range(1, 10):
     # Custom colored header for hitting lineup (yellow)
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
-    # Input fields stacked vertically, starting as blank space (" ")
+    # Select Player for Hitter
     player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
-    season = st.selectbox(f"Select Year for Hitter {i}", [" "] + seasons, key=f"hitter_{i}_season")
+    
+    # Dynamically filter available years for selected player
+    if player:
+        available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
+        season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
+    else:
+        season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
+    
     position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
@@ -163,9 +123,16 @@ for i in range(1, 6):
     # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
-    # Input fields stacked vertically, starting as blank space (" ")
+    # Select Player for Pitcher
     player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
-    season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + seasons, key=f"pitcher_{i}_season")
+    
+    # Dynamically filter available years for selected player
+    if player:
+        available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
+        season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
+    else:
+        season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
+    
     position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
@@ -277,32 +244,3 @@ if st.button("Generate Lineup"):
 
     # Display the table using Streamlit's built-in table function
     st.table(pitcher_df)
-
-    # Combine hitting and pitching dataframes
-    combined_df = pd.concat([hitter_df, pitcher_df], ignore_index=True)
-
-    # Convert dataframe to image
-    img = dataframe_to_image(combined_df)
-
-    # Save the image as PNG
-    img_bytes = save_image(img)
-
-    # Provide download button for the PNG
-    st.download_button(
-        label="Download Lineup as PNG",
-        data=img_bytes,
-        file_name="board_baseball_lineup.png",
-        mime="image/png"
-    )
-
-    # Determine the team name or use a default name
-    csv_file_name = f"{team_name}_lineup.csv" if team_name else "baseball_lineup.csv"
-
-    # Provide download button for CSV with dynamic file name
-    csv_bytes = combined_df.to_csv(index=False).encode()  # Convert DataFrame to CSV bytes
-    st.download_button(
-        label="Download Lineup as CSV",
-        data=csv_bytes,
-        file_name=csv_file_name,
-        mime="text/csv"
-    )
