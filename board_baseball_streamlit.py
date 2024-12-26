@@ -193,4 +193,116 @@ if st.button("Generate Lineup"):
                 hitter['Player'],
                 hitter['Position'],
                 hitter['Year'],
-                player_stats['H'].values
+                player_stats['H'].values[0],
+                player_stats['2B'].values[0],
+                player_stats['3B'].values[0],
+                player_stats['HR'].values[0],
+                player_stats['BB'].values[0],
+                player_stats['SB'].values[0],
+                player_stats['BA'].values[0]
+            )
+            
+            stats = {
+                'Index': i,
+                'Player': hitter['Player'],
+                'Year': hitter['Year'],
+                'Position': hitter['Position'],
+                'Hitter Boost': metrics['Hitter Boost'],
+                'Dice Row': metrics['Dice Row'],
+                'Stealing': metrics['Stealing'],
+            }
+
+            hitter_stats.append(stats)
+        else:
+            stats = {
+                'Index': i,
+                'Player': hitter['Player'],
+                'Year': hitter['Year'],
+                'Position': hitter['Position'],
+                'Hitter Boost': 'N/A',
+                'Dice Row': 'N/A',
+                'Stealing': 'N/A',
+            }
+            hitter_stats.append(stats)
+
+    hitter_df = pd.DataFrame(hitter_stats)
+
+    # Display the table using Streamlit's built-in table function
+    st.table(hitter_df)
+
+    # Display pitching lineup in a simple table format
+    st.write("### Pitching Rotation")
+    pitcher_stats = []
+    for i, pitcher in enumerate(pitching_lineup, 1):
+        player_stats = pitchers_data[
+            (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
+        ]
+        
+        if not player_stats.empty:
+            metrics = calculate_pitcher_metrics(
+                pitcher['Player'],
+                pitcher['Position'],
+                pitcher['Year'],
+                player_stats['ERA'].values[0],
+                player_stats['G'].values[0],
+                player_stats['IP'].values[0],
+                player_stats['SO'].values[0],
+                player_stats['BB'].values[0]
+            )
+            
+            stats = {
+                'Index': i,
+                'Player': pitcher['Player'],
+                'Year': pitcher['Year'],
+                'Position': pitcher['Position'],
+                'Pitcher Decrease': metrics['Pitcher Decrease'],
+                'Dice Row': metrics['Dice Row'],
+                'Endurance': metrics['Endurance'],
+            }
+
+            pitcher_stats.append(stats)
+        else:
+            stats = {
+                'Index': i,
+                'Player': pitcher['Player'],
+                'Year': pitcher['Year'],
+                'Position': pitcher['Position'],
+                'Pitcher Decrease': 'N/A',
+                'Dice Row': 'N/A',
+                'Endurance': 'N/A',
+            }
+            pitcher_stats.append(stats)
+
+    pitcher_df = pd.DataFrame(pitcher_stats)
+
+    # Display the table using Streamlit's built-in table function
+    st.table(pitcher_df)
+
+    # Combine hitting and pitching dataframes
+    combined_df = pd.concat([hitter_df, pitcher_df], ignore_index=True)
+
+    # Convert dataframe to image
+    img = dataframe_to_image(combined_df)
+
+    # Save the image as PNG
+    img_bytes = save_image(img)
+
+    # Provide download button for the PNG
+    st.download_button(
+        label="Download Lineup as PNG",
+        data=img_bytes,
+        file_name="board_baseball_lineup.png",
+        mime="image/png"
+    )
+
+    # Determine the team name or use a default name
+    csv_file_name = f"{team_name}_lineup.csv" if team_name else "baseball_lineup.csv"
+
+    # Provide download button for CSV with dynamic file name
+    csv_bytes = combined_df.to_csv(index=False).encode()  # Convert DataFrame to CSV bytes
+    st.download_button(
+        label="Download Lineup as CSV",
+        data=csv_bytes,
+        file_name=csv_file_name,
+        mime="text/csv"
+    )
