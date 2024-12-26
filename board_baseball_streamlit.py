@@ -74,7 +74,7 @@ def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA,
     }
 
 # Function to convert dataframe to image
-def dataframe_to_image(df):
+def dataframe_to_image(df, header_text):
     # Create a white canvas
     img_width = 1000
     img_height = 50 + len(df) * 40  # Height adjusts based on the number of rows
@@ -94,13 +94,17 @@ def dataframe_to_image(df):
     x_pos = 10
     y_pos = 10
     
+    # Draw the header text
+    draw.text((x_pos, y_pos), header_text, font=font, fill=(0, 0, 0))
+    y_pos += 30  # Move down after header text
+    
     # Draw column headers
     for col in columns:
         draw.text((x_pos, y_pos), col, font=font, fill=(0, 0, 0))
         x_pos += 180  # Space between columns
     
     # Draw row values
-    y_pos = 40  # Start drawing rows after headers
+    y_pos += 30  # Move down after column headers
     for idx, row in df.iterrows():
         x_pos = 10
         for val in row:
@@ -291,40 +295,23 @@ if st.button("Generate Lineup"):
     # Display the table using Streamlit's built-in table function
     st.table(pitcher_df)
 
-    # CSV export for hitting lineup
-    csv_hitter = hitter_df.to_csv(index=False)
-    st.download_button(
-        label="Download Hitting Lineup as CSV",
-        data=csv_hitter,
-        file_name=f"{team_name}_hitting_lineup.csv" if team_name else "hitting_lineup.csv",
-        mime="text/csv"
-    )
+    # Create PNG output for hitting and pitching lineups combined
+    img_hitter = dataframe_to_image(hitter_df, "Hitting Lineup")
+    img_pitcher = dataframe_to_image(pitcher_df, "Pitching Lineup")
+    
+    # Combine both images into one
+    total_height = img_hitter.height + img_pitcher.height
+    combined_img = Image.new('RGB', (img_hitter.width, total_height), color=(255, 255, 255))
+    combined_img.paste(img_hitter, (0, 0))
+    combined_img.paste(img_pitcher, (0, img_hitter.height))
+    
+    # Save the combined image as PNG
+    img_bytes = save_image(combined_img)
 
-    # CSV export for pitching lineup
-    csv_pitcher = pitcher_df.to_csv(index=False)
+    # Provide download button for the combined PNG
     st.download_button(
-        label="Download Pitching Lineup as CSV",
-        data=csv_pitcher,
-        file_name=f"{team_name}_pitching_lineup.csv" if team_name else "pitching_lineup.csv",
-        mime="text/csv"
-    )
-
-    # PNG export for hitting lineup
-    img_hitter = dataframe_to_image(hitter_df)
-    img_hitter_bytes = save_image(img_hitter)
-    st.download_button(
-        label="Download Hitting Lineup as PNG",
-        data=img_hitter_bytes,
-        file_name=f"{team_name}_hitting_lineup.png" if team_name else "hitting_lineup.png",
-        mime="image/png"
-    )
-
-    # PNG export for pitching lineup
-    img_pitcher = dataframe_to_image(pitcher_df)
-    img_pitcher_bytes = save_image(img_pitcher)
-    st.download_button(
-        label="Download Pitching Lineup as PNG",
-        data=img_pitcher_bytes,
-        file_name=f"{team_name}_pitching_lineup.png" if team_name else "pitching_lineup.png",
+        label="Download Combined Lineup as PNG",
+        data=img_bytes,
+        file_name=f"{team_name}_combined_lineup.png" if team_name else "combined_lineup.png",
         mime="image/png"
     )
