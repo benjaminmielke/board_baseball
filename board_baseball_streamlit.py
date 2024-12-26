@@ -296,8 +296,8 @@ if st.button("Generate Lineup"):
     st.table(pitcher_df)
 
     # Create PNG output for hitting and pitching lineups combined
-    img_hitter = dataframe_to_image(hitter_df, "Hitting Lineup")
-    img_pitcher = dataframe_to_image(pitcher_df, "Pitching Lineup")
+    img_hitter = dataframe_to_image(hitter_df, f"{team_name} - Hitting Lineup")
+    img_pitcher = dataframe_to_image(pitcher_df, f"{team_name} - Pitching Rotation")
     
     # Combine both images into one
     total_height = img_hitter.height + img_pitcher.height
