@@ -73,6 +73,52 @@ def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA,
         'Endurance': endurance,
     }
 
+# Function to convert dataframe to image
+def dataframe_to_image(df):
+    # Create a white canvas
+    img_width = 1000
+    img_height = 50 + len(df) * 40  # Height adjusts based on the number of rows
+    img = Image.new('RGB', (img_width, img_height), color=(255, 255, 255))
+    
+    # Initialize ImageDraw
+    draw = ImageDraw.Draw(img)
+    
+    # Load font (default font in case the system does not have arial)
+    try:
+        font = ImageFont.truetype("arial.ttf", 16)
+    except IOError:
+        font = ImageFont.load_default()
+    
+    # Define column names and column widths
+    columns = df.columns
+    x_pos = 10
+    y_pos = 10
+    
+    # Draw column headers
+    for col in columns:
+        draw.text((x_pos, y_pos), col, font=font, fill=(0, 0, 0))
+        x_pos += 180  # Space between columns
+    
+    # Draw row values
+    y_pos = 40  # Start drawing rows after headers
+    for idx, row in df.iterrows():
+        x_pos = 10
+        for val in row:
+            draw.text((x_pos, y_pos), str(val), font=font, fill=(0, 0, 0))
+            x_pos += 180  # Space between columns
+        y_pos += 40  # Move to the next row
+    
+    return img
+
+# Function to save the image as a PNG file
+def save_image(img):
+    # Save the image to a BytesIO object (in-memory file)
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='PNG')
+    img_bytes.seek(0)  # Reset pointer to the beginning of the image data
+    
+    return img_bytes
+
 # App starts here
 st.title("Board Baseball Lineup Created")
 
@@ -102,16 +148,9 @@ for i in range(1, 10):
     # Custom colored header for hitting lineup (yellow)
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
-    # Select Player for Hitter
+    # Input fields stacked vertically, starting as blank space (" ")
     player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
-    
-    # Dynamically filter available years for selected player
-    if player:
-        available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
-        season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
-    else:
-        season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
-    
+    season = st.selectbox(f"Select Year for Hitter {i}", [" "] + sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique()), key=f"hitter_{i}_season")
     position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
@@ -123,16 +162,9 @@ for i in range(1, 6):
     # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
-    # Select Player for Pitcher
+    # Input fields stacked vertically, starting as blank space (" ")
     player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
-    
-    # Dynamically filter available years for selected player
-    if player:
-        available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
-        season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
-    else:
-        season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
-    
+    season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique()), key=f"pitcher_{i}_season")
     position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
@@ -164,41 +196,17 @@ if st.button("Generate Lineup"):
                 player_stats['2B'].values[0],
                 player_stats['3B'].values[0],
                 player_stats['HR'].values[0],
-                player_stats['BB'].values[0],
+                player_stats['BB/H'].values[0],
                 player_stats['SB'].values[0],
-                player_stats['BA'].values[0]
+                player_stats['AVG'].values[0]
             )
-            
-            stats = {
-                'Index': i,
-                'Player': hitter['Player'],
-                'Year': hitter['Year'],
-                'Position': hitter['Position'],
-                'Hitter Boost': metrics['Hitter Boost'],
-                'Dice Row': metrics['Dice Row'],
-                'Stealing': metrics['Stealing'],
-            }
-
-            hitter_stats.append(stats)
-        else:
-            stats = {
-                'Index': i,
-                'Player': hitter['Player'],
-                'Year': hitter['Year'],
-                'Position': hitter['Position'],
-                'Hitter Boost': 'N/A',
-                'Dice Row': 'N/A',
-                'Stealing': 'N/A',
-            }
-            hitter_stats.append(stats)
-
+            hitter_stats.append({**hitter, **metrics})
+    
     hitter_df = pd.DataFrame(hitter_stats)
-
-    # Display the table using Streamlit's built-in table function
-    st.table(hitter_df)
+    st.write(hitter_df)
 
     # Display pitching lineup in a simple table format
-    st.write("### Pitching Rotation")
+    st.write("### Pitching Lineup")
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
         player_stats = pitchers_data[
@@ -214,33 +222,33 @@ if st.button("Generate Lineup"):
                 player_stats['G'].values[0],
                 player_stats['IP'].values[0],
                 player_stats['SO'].values[0],
-                player_stats['BB'].values[0]
+                player_stats['BB/P'].values[0]
             )
-            
-            stats = {
-                'Index': i,
-                'Player': pitcher['Player'],
-                'Year': pitcher['Year'],
-                'Position': pitcher['Position'],
-                'Pitcher Decrease': metrics['Pitcher Decrease'],
-                'Dice Row': metrics['Dice Row'],
-                'Endurance': metrics['Endurance'],
-            }
-
-            pitcher_stats.append(stats)
-        else:
-            stats = {
-                'Index': i,
-                'Player': pitcher['Player'],
-                'Year': pitcher['Year'],
-                'Position': pitcher['Position'],
-                'Pitcher Decrease': 'N/A',
-                'Dice Row': 'N/A',
-                'Endurance': 'N/A',
-            }
-            pitcher_stats.append(stats)
-
+            pitcher_stats.append({**pitcher, **metrics})
+    
     pitcher_df = pd.DataFrame(pitcher_stats)
+    st.write(pitcher_df)
 
-    # Display the table using Streamlit's built-in table function
-    st.table(pitcher_df)
+    # Combine hitting and pitching data into one CSV
+    final_lineup_df = pd.concat([hitter_df, pitcher_df], ignore_index=True)
+    
+    # Button to download the CSV file
+    if st.button("Download CSV"):
+        csv = final_lineup_df.to_csv(index=False)
+        st.download_button(
+            label="Download Lineup as CSV",
+            data=csv,
+            file_name="baseball_lineup.csv",
+            mime="text/csv"
+        )
+
+    # Button to download the PNG file
+    if st.button("Download PNG"):
+        img = dataframe_to_image(final_lineup_df)
+        img_bytes = save_image(img)
+        st.download_button(
+            label="Download Lineup as PNG",
+            data=img_bytes,
+            file_name="baseball_lineup.png",
+            mime="image/png"
+        )
