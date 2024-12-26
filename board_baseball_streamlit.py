@@ -212,7 +212,7 @@ if st.button("Generate Lineup"):
                     hitter['Player'], 
                     hitter['Position'], 
                     hitter['Year'], 
-                    *hitter_data[['H', 'Double', 'Triple', 'HR', 'BB_H', 'SB', 'AVG']].iloc[0]
+                    *hitter_data[['H', '2B', '3B', 'HR', 'BB_H', 'SB', 'AVG']].iloc[0]
                 )
                 hitter_stats.append({
                     'Player': hitter['Player'],
