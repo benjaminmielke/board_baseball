@@ -200,118 +200,64 @@ if st.button("Generate Lineup"):
     # Display hitting lineup in a simple table format
     st.write("### Hitting Lineup")
     hitter_stats = []
-    for i, hitter in enumerate(hitting_lineup, 1):
-        player_stats = hitters_data[
-            (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
-        ]
-        
-        if not player_stats.empty:
-            metrics = calculate_hitter_metrics(
-                hitter['Player'],
-                hitter['Position'],
-                hitter['Year'],
-                player_stats['H'].values[0],
-                player_stats['2B'].values[0],
-                player_stats['3B'].values[0],
-                player_stats['HR'].values[0],
-                player_stats['BB'].values[0],
-                player_stats['SB'].values[0],
-                player_stats['BA'].values[0]
-            )
-            
-            stats = {
-                'Index': i,
-                'Player': hitter['Player'],
-                'Year': hitter['Year'],
-                'Position': hitter['Position'],
-                'Hitter Boost': metrics['Hitter Boost'],
-                'Dice Row': metrics['Dice Row'],
-                'Stealing': metrics['Stealing'],
-            }
 
-            hitter_stats.append(stats)
-        else:
-            stats = {
-                'Index': i,
-                'Player': hitter['Player'],
-                'Year': hitter['Year'],
-                'Position': hitter['Position'],
-                'Hitter Boost': 'N/A',
-                'Dice Row': 'N/A',
-                'Stealing': 'N/A',
-            }
-            hitter_stats.append(stats)
+    for hitter in hitting_lineup:
+        if hitter['Player'] and hitter['Year'] and hitter['Position']:
+            hitter_data = hitters_data[(hitters_data['Name'] == hitter['Player']) & 
+                                       (hitters_data['Year'] == hitter['Year'])]
 
-    hitter_df = pd.DataFrame(hitter_stats)
+            if not hitter_data.empty:
+                # Calculate metrics for this hitter
+                metrics = calculate_hitter_metrics(
+                    hitter['Player'], 
+                    hitter['Position'], 
+                    hitter['Year'], 
+                    *hitter_data[['H', 'Double', 'Triple', 'HR', 'BB_H', 'SB', 'AVG']].iloc[0]
+                )
+                hitter_stats.append({
+                    'Player': hitter['Player'],
+                    'Position': hitter['Position'],
+                    'Year': hitter['Year'],
+                    'Hitter Boost': metrics['Hitter Boost'],
+                    'Dice Row': metrics['Dice Row'],
+                    'Stealing': metrics['Stealing'],
+                })
 
-    # Display the table using Streamlit's built-in table function
-    st.table(hitter_df)
-
-    # Display pitching lineup in a simple table format
+    # Display pitcher lineup in a simple table format
     st.write("### Pitching Rotation")
     pitcher_stats = []
-    for i, pitcher in enumerate(pitching_lineup, 1):
-        player_stats = pitchers_data[
-            (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
-        ]
-        
-        if not player_stats.empty:
-            metrics = calculate_pitcher_metrics(
-                pitcher['Player'],
-                pitcher['Position'],
-                pitcher['Year'],
-                player_stats['ERA'].values[0],
-                player_stats['G'].values[0],
-                player_stats['IP'].values[0],
-                player_stats['SO'].values[0],
-                player_stats['BB'].values[0]
-            )
-            
-            stats = {
-                'Index': i,
-                'Player': pitcher['Player'],
-                'Year': pitcher['Year'],
-                'Position': pitcher['Position'],
-                'Pitcher Decrease': metrics['Pitcher Decrease'],
-                'Dice Row': metrics['Dice Row'],
-                'Endurance': metrics['Endurance'],
-            }
 
-            pitcher_stats.append(stats)
-        else:
-            stats = {
-                'Index': i,
-                'Player': pitcher['Player'],
-                'Year': pitcher['Year'],
-                'Position': pitcher['Position'],
-                'Pitcher Decrease': 'N/A',
-                'Dice Row': 'N/A',
-                'Endurance': 'N/A',
-            }
-            pitcher_stats.append(stats)
+    for pitcher in pitching_lineup:
+        if pitcher['Player'] and pitcher['Year'] and pitcher['Position']:
+            pitcher_data = pitchers_data[(pitchers_data['Name'] == pitcher['Player']) & 
+                                         (pitchers_data['Year'] == pitcher['Year'])]
 
+            if not pitcher_data.empty:
+                # Calculate metrics for this pitcher
+                metrics = calculate_pitcher_metrics(
+                    pitcher['Player'], 
+                    pitcher['Position'], 
+                    pitcher['Year'], 
+                    *pitcher_data[['ERA', 'G', 'IP', 'SO', 'BB_P']].iloc[0]
+                )
+                pitcher_stats.append({
+                    'Player': pitcher['Player'],
+                    'Position': pitcher['Position'],
+                    'Year': pitcher['Year'],
+                    'Pitcher Decrease': metrics['Pitcher Decrease'],
+                    'Dice Row': metrics['Dice Row'],
+                    'Endurance': metrics['Endurance'],
+                })
+
+    # Create DataFrame from stats
+    hitter_df = pd.DataFrame(hitter_stats)
     pitcher_df = pd.DataFrame(pitcher_stats)
 
-    # Display the table using Streamlit's built-in table function
-    st.table(pitcher_df)
+    # Combine both DataFrames
+    full_df = pd.concat([hitter_df, pitcher_df], ignore_index=True)
 
-    # Create PNG output for hitting and pitching lineups combined
-    img_hitter = dataframe_to_image(hitter_df, "Hitting Lineup")
-    img_pitcher = dataframe_to_image(pitcher_df, "Pitching Lineup")
-    
-    # Combine both images into one
-    total_height = img_hitter.height + img_pitcher.height
-    combined_img = Image.new('RGB', (img_hitter.width, total_height), color=(255, 255, 255))
-    combined_img.paste(img_hitter, (0, 0))
-    combined_img.paste(img_pitcher, (0, img_hitter.height))
-    
-    # Save the combined image as PNG
-    img_bytes = save_image(combined_img)
+    # Convert DataFrame to image
+    img = dataframe_to_image(full_df, "Baseball Lineup")
 
-    # Provide download button for the combined PNG
-    st.download_button(
-        label="Download Combined Lineup as PNG",
-        data=img_bytes,
-        file_name=f"{team_name}_combined_lineup.png" if team_name else "combined_lineup.png",
-        mime="image/png"
-    )
+    # Display the image in the app
+    st.image(img)
