@@ -142,31 +142,31 @@ seasons = sorted(hitters_data['Year'].unique())  # Assuming 'Year' is common for
 positions_hitter = ['1B', '2B', '3B', 'SS', 'C', 'LF', 'CF', 'RF', 'DH']
 positions_pitcher = ['SP', 'RP', 'CL']
 
-# Create input fields for hitters, all starting as blank (None)
+# Create input fields for hitters, all starting as blank (empty string)
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
     # Custom colored header for hitting lineup (yellow)
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
-    # Input fields stacked vertically, starting as blank
-    player = st.selectbox(f"Select Player for Hitter {i}", [None] + hitters_names, key=f"hitter_{i}_player")
-    season = st.selectbox(f"Select Year for Hitter {i}", [None] + seasons, key=f"hitter_{i}_season")
-    position = st.selectbox(f"Select Position for Hitter {i}", [None] + positions_hitter, key=f"hitter_{i}_position")
+    # Input fields stacked vertically, starting as blank space (" ")
+    player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
+    season = st.selectbox(f"Select Year for Hitter {i}", [" "] + seasons, key=f"hitter_{i}_season")
+    position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
-# Create input fields for pitchers, all starting as blank (None)
+# Create input fields for pitchers, all starting as blank (empty string)
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
     # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
-    # Input fields stacked vertically, starting as blank
-    player = st.selectbox(f"Select Player for Pitcher {i}", [None] + pitchers_names, key=f"pitcher_{i}_player")
-    season = st.selectbox(f"Select Year for Pitcher {i}", [None] + seasons, key=f"pitcher_{i}_season")
-    position = st.selectbox(f"Select Role for Pitcher {i}", [None] + positions_pitcher, key=f"pitcher_{i}_position")
+    # Input fields stacked vertically, starting as blank space (" ")
+    player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+    season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + seasons, key=f"pitcher_{i}_season")
+    position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
