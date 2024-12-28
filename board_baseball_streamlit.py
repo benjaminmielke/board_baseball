@@ -4,55 +4,50 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# Set page config to use a narrow layout
+# Set page config for a narrow layout
 st.set_page_config(layout="wide")
 
-# Inject custom CSS for mobile layout and prevent stacking
+# Inject custom CSS for mobile layout adjustments
 st.markdown("""
     <style>
-    /* Ensure block container doesn't take up too much space on mobile */
+    /* Set a narrow width for the container on mobile */
     .block-container {
-        max-width: 100% !important;  /* Allow container to stretch to full width */
+        max-width: 100% !important;
         padding-left: 10px !important;
         padding-right: 10px !important;
     }
 
-    /* Make the column layout more flexible with flexbox */
+    /* Adjust layout of columns on smaller screens */
     .css-1v0mbdj {
         display: flex !important;
         flex-wrap: wrap !important;
-        justify-content: space-between !important;  /* Add space between columns */
+        justify-content: space-between !important;
     }
 
-    /* Specifically for small screen sizes (mobile), ensure columns fit well */
+    /* Mobile adjustments */
     @media screen and (max-width: 600px) {
+        /* Ensure columns stretch across the available space */
         .css-1v0mbdj {
-            flex-direction: row !important;  /* Ensure columns stay in one row */
-            width: 100% !important;
+            flex-direction: column !important;  /* Stack items on mobile */
         }
         
         .css-1aumxhk {
-            width: 33% !important;  /* Limit the width of each column on mobile */
-        }
-        
-        /* Adjust input fields and selectors */
-        .css-1y4ud5 {
-            padding: 8px 0;
+            width: 100% !important;  /* Full width for each column on mobile */
         }
 
-        .css-1axtv6d {
-            font-size: 14px;
-        }
-        
-        /* Adjusting select box sizes on mobile */
+        /* Ensure selectboxes are still easy to read on mobile */
         select {
             font-size: 14px !important;
+        }
+        
+        .css-1axtv6d {
+            font-size: 14px;
         }
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Sample data loading function
+# Function to load data
 @st.cache_data
 def load_data(file_path):
     return pd.read_csv(file_path)
