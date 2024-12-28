@@ -4,8 +4,8 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# Load the CSV file based on input type (hitters or pitchers)
-@st.cache
+# Use @st.cache_data to efficiently cache the CSV file loading
+@st.cache_data
 def load_data(file_path):
     return pd.read_csv(file_path)
 
@@ -84,10 +84,7 @@ def dataframe_to_image(df, header_text):
     draw = ImageDraw.Draw(img)
     
     # Load font (default font in case the system does not have arial)
-    #try:
-    font = ImageFont.truetype("Exo2-VariableFont_wght.ttf", 20)
-   # except IOError:
-   #     font = ImageFont.load_default()
+    font = ImageFont.load_default()
     
     # Define column names and column widths
     columns = df.columns
