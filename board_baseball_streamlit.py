@@ -10,38 +10,25 @@ st.set_page_config(layout="wide")
 # Inject custom CSS for mobile layout adjustments
 st.markdown("""
     <style>
-    /* Set a narrow width for the container on mobile */
+    /* Set container to full width with padding */
     .block-container {
         max-width: 100% !important;
         padding-left: 10px !important;
         padding-right: 10px !important;
     }
 
-    /* Adjust layout of columns on smaller screens */
-    .css-1v0mbdj {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: space-between !important;
-    }
-
-    /* Mobile adjustments */
+    /* Mobile layout overrides */
     @media screen and (max-width: 600px) {
-        /* Ensure columns stretch across the available space */
+        /* Use CSS Grid instead of Flexbox to align selectboxes horizontally */
         .css-1v0mbdj {
-            flex-direction: column !important;  /* Stack items on mobile */
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 10px;
         }
         
+        /* Ensure each selectbox takes the available space */
         .css-1aumxhk {
-            width: 100% !important;  /* Full width for each column on mobile */
-        }
-
-        /* Ensure selectboxes are still easy to read on mobile */
-        select {
-            font-size: 14px !important;
-        }
-        
-        .css-1axtv6d {
-            font-size: 14px;
+            width: 100% !important;
         }
     }
     </style>
@@ -118,24 +105,21 @@ for i in range(1, 10):
     # Custom header
     st.markdown(f"<h4 style='color: lightblue;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
-    # Create flexible columns
+    # Use columns to place selectboxes horizontally (adjusted for mobile)
     col1, col2, col3 = st.columns([2, 1, 1])  # Adjusted column width for mobile responsiveness
     
-    # Player selection for hitting
     with col1:
-        player = st.selectbox(f"Player", [" "] + hitters_names, key=f"hitter_{i}_player")
+        player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
     
-    # Year selection for hitting
     with col2:
         if player:
             available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
-            season = st.selectbox(f"=Year", [" "] + available_years, key=f"hitter_{i}_season")
+            season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
         else:
-            season = st.selectbox(f"Year", [" "], key=f"hitter_{i}_season")
+            season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
     
-    # Position selection for hitting
     with col3:
-        position = st.selectbox(f"Position", [" "] + positions_hitter, key=f"hitter_{i}_position")
+        position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -146,24 +130,21 @@ for i in range(1, 6):
     # Custom header
     st.markdown(f"<h4 style='color: lightblue;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
-    # Create flexible columns
+    # Use columns to place selectboxes horizontally (adjusted for mobile)
     col1, col2, col3 = st.columns([2, 1, 1])  # Adjusted column width for mobile responsiveness
     
-    # Player selection for pitching
     with col1:
-        player = st.selectbox(f"Player", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+        player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
     
-    # Year selection for pitching
     with col2:
         if player:
             available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
-            season = st.selectbox(f"Year", [" "] + available_years, key=f"pitcher_{i}_season")
+            season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
         else:
-            season = st.selectbox(f"Year", [" "], key=f"pitcher_{i}_season")
+            season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
     
-    # Position selection for pitching
     with col3:
-        position = st.selectbox(f"Role", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
+        position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
