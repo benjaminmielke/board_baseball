@@ -4,27 +4,37 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# Set page configuration for wider layout
-st.set_page_config(layout="wide")  # Ensures the app uses the entire width of the page
+# Set page config to centered layout (default) for a narrow view
+st.set_page_config(layout="centered")  # This will center the content in a narrower container
 
-# Inject custom CSS to handle responsiveness
+# Inject custom CSS to control mobile responsiveness and restrict layout width
 st.markdown("""
     <style>
-    /* Custom CSS to make the layout responsive */
+    /* Custom CSS to narrow down the app's layout to fit mobile screens better */
+    .block-container {
+        max-width: 400px !important;  /* Set max width for mobile view */
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Style for mobile headers */
     @media screen and (max-width: 600px) {
-        .streamlit-expanderHeader {
-            font-size: 14px;
-        }
-        .block-container {
-            padding-left: 0rem !important;
-            padding-right: 0rem !important;
-        }
         .css-1aumxhk {
             max-width: 100% !important;
         }
+        
+        .streamlit-expanderHeader {
+            font-size: 14px;
+        }
+        
+        .css-1axtv6d {
+            font-size: 16px;
+        }
     }
-    .css-1aumxhk {
-        max-width: 1200px !important;  /* Max width for large screens */
+    
+    /* Add padding to columns for better spacing */
+    .css-1v0mbdj {
+        padding: 10px;
     }
     </style>
 """, unsafe_allow_html=True)
