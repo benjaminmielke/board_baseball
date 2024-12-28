@@ -4,37 +4,49 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# Set page config to centered layout (default) for a narrow view
-st.set_page_config(layout="centered")  # This will center the content in a narrower container
+# Set page config to centered layout (narrow container)
+st.set_page_config(layout="centered")
 
 # Inject custom CSS to control mobile responsiveness and restrict layout width
 st.markdown("""
     <style>
-    /* Custom CSS to narrow down the app's layout to fit mobile screens better */
+    /* Custom CSS for better mobile responsiveness */
     .block-container {
-        max-width: 350px !important;  /* Set max width for mobile view */
+        max-width: 380px !important;  /* Set max width for mobile view */
         padding-left: 1rem !important;
         padding-right: 1rem !important;
     }
-    
-    /* Style for mobile headers */
-    @media screen and (max-width: 350px) {
-        .css-1aumxhk {
-            max-width: 100% !important;
+
+    /* Ensure columns stack horizontally on small screens and don't break into a single column */
+    .css-1v0mbdj {
+        display: flex !important;  /* Flex layout to make columns responsive */
+        flex-wrap: wrap !important;
+    }
+
+    /* For smaller screens (e.g., mobile phones), adjust layout */
+    @media screen and (max-width: 380px) {
+        .css-1v0mbdj {
+            flex-direction: column !important;  /* Stack columns vertically */
+            width: 100% !important;
         }
         
+        .css-1aumxhk {
+            max-width: 100% !important;  /* Ensure content doesn't overflow */
+        }
+
+        /* Adjust size of inputs and selectors */
         .streamlit-expanderHeader {
             font-size: 14px;
         }
-        
+
         .css-1axtv6d {
             font-size: 16px;
         }
-    }
-    
-    /* Add padding to columns for better spacing */
-    .css-1v0mbdj {
-        padding: 10px;
+        
+        /* Adjust space between inputs/columns */
+        .css-1y4ud5 {
+            padding: 10px 0;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -181,12 +193,12 @@ positions_pitcher = ['SP', 'RP', 'CL']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    # Custom colored header for hitting lineup (yellow)
-    st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
+    # Custom colored header for hitting lineup (light blue)
+    st.markdown(f"<h4 style='color: lightblue;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
     # Create 3 columns for player, year, and position
     col1, col2, col3 = st.columns([2, 1, 1])  # Player name takes 2 parts of the width
-
+    
     # Select Player for Hitter (larger column)
     with col1:
         player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
@@ -236,7 +248,7 @@ for i in range(1, 6):
 # Button to generate the lineup
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
-
+    
     # Display team name if provided
     if team_name:
         st.write(f"### Team: {team_name}")
