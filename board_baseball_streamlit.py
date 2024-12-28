@@ -4,7 +4,7 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# Cache function to load the data
+# Use @st.cache_data to efficiently cache the CSV file loading
 @st.cache_data
 def load_data(file_path):
     return pd.read_csv(file_path)
@@ -123,78 +123,192 @@ def save_image(img):
 # App starts here
 st.title("Board Baseball Lineup Created")
 
-# Step 1: Team name input field
-if 'team_name' not in st.session_state:
-    st.session_state.team_name = ""
+# Add an input field for the team name, starting with an empty string
+team_name = st.text_input("Enter your Team Name", "")
 
-team_name = st.text_input("Enter your Team Name", value=st.session_state.team_name)
+# File paths for hitter and pitcher stats
+hitters_file = 'hitters_stats.csv'
+pitchers_file = 'pitchers_stats.csv'
 
-if team_name:
-    st.session_state.team_name = team_name
-    st.session_state.step = 1  # Move to step 1 after team name is entered
+# Load hitter and pitcher data
+hitters_data = load_data(hitters_file)
+pitchers_data = load_data(pitchers_file)
 
-# Step 2: Show hitting lineup
-if 'step' not in st.session_state:
-    st.session_state.step = 0
+# Extract player names and seasons for the dropdowns
+hitters_names = sorted(hitters_data['Name'].unique())  # Updated column name
+pitchers_names = sorted(pitchers_data['Name'].unique())  # Updated column name
 
-# If the team name is set, proceed to the hitting lineup section
-if st.session_state.step == 1:
-    st.header("Hitting Lineup")
+# Positions for hitters and pitchers
+positions_hitter = ['1B', '2B', '3B', 'SS', 'C', 'LF', 'CF', 'RF', 'DH']
+positions_pitcher = ['SP', 'RP', 'CL']
 
-    # Step 2: Hitter 1 selection
-    hitting_lineup = []
-    if 'hitter_1' not in st.session_state:
-        st.session_state.hitter_1 = {}
-    hitter_1 = st.session_state.hitter_1
-
-    st.markdown("<h4 style='color: yellow;'>Hitter 1</h4>", unsafe_allow_html=True)
-    player_1 = st.selectbox("Select Player for Hitter 1", [" "] + hitters_names, key="hitter_1_player")
+# Create input fields for hitters, all starting as blank (empty string)
+st.header("Hitting Lineup")
+hitting_lineup = []
+for i in range(1, 10):
+    # Custom colored header for hitting lineup (yellow)
+    st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
-    if player_1:
-        available_years_1 = sorted(hitters_data[hitters_data['Name'] == player_1]['Year'].unique())
-        season_1 = st.selectbox(f"Select Year for Hitter 1", [" "] + available_years_1, key="hitter_1_year")
-    else:
-        season_1 = st.selectbox(f"Select Year for Hitter 1", [" "], key="hitter_1_year")
-
-    position_1 = st.selectbox(f"Select Position for Hitter 1", [" "] + positions_hitter, key="hitter_1_position")
+    # Select Player for Hitter
+    player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
     
-    if player_1 and season_1 and position_1:
-        hitting_lineup.append({"Player": player_1, "Year": season_1, "Position": position_1})
-        st.session_state.step = 2  # Move to next step once player 1 is filled
-
-# Step 3: Show additional players (Hitter 2, Hitter 3, etc.)
-if st.session_state.step == 2:
-    # Hitter 2
-    st.markdown("<h4 style='color: yellow;'>Hitter 2</h4>", unsafe_allow_html=True)
-    player_2 = st.selectbox("Select Player for Hitter 2", [" "] + hitters_names, key="hitter_2_player")
-    if player_2:
-        available_years_2 = sorted(hitters_data[hitters_data['Name'] == player_2]['Year'].unique())
-        season_2 = st.selectbox(f"Select Year for Hitter 2", [" "] + available_years_2, key="hitter_2_year")
+    # Dynamically filter available years for selected player
+    if player:
+        available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
+        season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
     else:
-        season_2 = st.selectbox(f"Select Year for Hitter 2", [" "], key="hitter_2_year")
-
-    position_2 = st.selectbox(f"Select Position for Hitter 2", [" "] + positions_hitter, key="hitter_2_position")
-
-    if player_2 and season_2 and position_2:
-        hitting_lineup.append({"Player": player_2, "Year": season_2, "Position": position_2})
-        st.session_state.step = 3  # Move to next step
-
-# Repeat similar pattern for Hitter 3, Hitter 4, etc.
-
-# Pitcher Selection and Further steps
-# Once hitting lineup is fully completed, we move to pitching steps
-
-if st.session_state.step == 5:
-    st.markdown("<h4 style='color: yellow;'>Pitcher 1</h4>", unsafe_allow_html=True)
-    pitcher_1 = st.selectbox("Select Player for Pitcher 1", [" "] + pitchers_names, key="pitcher_1_player")
+        season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
     
-    if pitcher_1:
-        available_years_1 = sorted(pitchers_data[pitchers_data['Name'] == pitcher_1]['Year'].unique())
-        season_1 = st.selectbox(f"Select Year for Pitcher 1", [" "] + available_years_1, key="pitcher_1_year")
+    position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
+    
+    hitting_lineup.append({"Player": player, "Year": season, "Position": position})
+
+# Create input fields for pitchers, all starting as blank (empty string)
+st.header("Pitching Rotation")
+pitching_lineup = []
+for i in range(1, 6):
+    # Custom colored header for pitching lineup (green)
+    st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
+    
+    # Select Player for Pitcher
+    player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+    
+    # Dynamically filter available years for selected player
+    if player:
+        available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
+        season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
     else:
-        season_1 = st.selectbox(f"Select Year for Pitcher 1", [" "], key="pitcher_1_year")
+        season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
+    
+    position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
+    
+    pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
-    position_1 = st.selectbox(f"Select Position for Pitcher 1", [" "] + positions_pitcher, key="pitcher_1_position")
+# Button to generate the lineup
+if st.button("Generate Lineup"):
+    st.subheader("Your Lineup")
 
-    # Continue to build the pitcher lineup step by step as needed
+    # Display team name if provided
+    if team_name:
+        st.write(f"### Team: {team_name}")
+    else:
+        st.write("### Team: [No team name provided]")
 
+    # Display hitting lineup in a simple table format
+    st.write("### Hitting Lineup")
+    hitter_stats = []
+    for i, hitter in enumerate(hitting_lineup, 1):
+        player_stats = hitters_data[
+            (hitters_data['Name'] == hitter['Player']) & (hitters_data['Year'] == hitter['Year'])
+        ]
+        
+        if not player_stats.empty:
+            metrics = calculate_hitter_metrics(
+                hitter['Player'],
+                hitter['Position'],
+                hitter['Year'],
+                player_stats['H'].values[0],
+                player_stats['2B'].values[0],
+                player_stats['3B'].values[0],
+                player_stats['HR'].values[0],
+                player_stats['BB'].values[0],
+                player_stats['SB'].values[0],
+                player_stats['BA'].values[0]
+            )
+            
+            stats = {
+                'Index': i,
+                'Player': hitter['Player'],
+                'Year': hitter['Year'],
+                'Position': hitter['Position'],
+                'Hitter Boost': metrics['Hitter Boost'],
+                'Dice Row': metrics['Dice Row'],
+                'Stealing': metrics['Stealing'],
+            }
+
+            hitter_stats.append(stats)
+        else:
+            stats = {
+                'Index': i,
+                'Player': hitter['Player'],
+                'Year': hitter['Year'],
+                'Position': hitter['Position'],
+                'Hitter Boost': 'N/A',
+                'Dice Row': 'N/A',
+                'Stealing': 'N/A',
+            }
+            hitter_stats.append(stats)
+
+    hitter_df = pd.DataFrame(hitter_stats)
+
+    # Display the table using Streamlit's built-in table function
+    st.table(hitter_df)
+
+    # Display pitching lineup in a simple table format
+    st.write("### Pitching Rotation")
+    pitcher_stats = []
+    for i, pitcher in enumerate(pitching_lineup, 1):
+        player_stats = pitchers_data[
+            (pitchers_data['Name'] == pitcher['Player']) & (pitchers_data['Year'] == pitcher['Year'])
+        ]
+        
+        if not player_stats.empty:
+            metrics = calculate_pitcher_metrics(
+                pitcher['Player'],
+                pitcher['Position'],
+                pitcher['Year'],
+                player_stats['ERA'].values[0],
+                player_stats['G'].values[0],
+                player_stats['IP'].values[0],
+                player_stats['SO'].values[0],
+                player_stats['BB'].values[0]
+            )
+            
+            stats = {
+                'Index': i,
+                'Player': pitcher['Player'],
+                'Year': pitcher['Year'],
+                'Position': pitcher['Position'],
+                'Pitcher Decrease': metrics['Pitcher Decrease'],
+                'Dice Row': metrics['Dice Row'],
+                'Endurance': metrics['Endurance'],
+            }
+
+            pitcher_stats.append(stats)
+        else:
+            stats = {
+                'Index': i,
+                'Player': pitcher['Player'],
+                'Year': pitcher['Year'],
+                'Position': pitcher['Position'],
+                'Pitcher Decrease': 'N/A',
+                'Dice Row': 'N/A',
+                'Endurance': 'N/A',
+            }
+            pitcher_stats.append(stats)
+
+    pitcher_df = pd.DataFrame(pitcher_stats)
+
+    # Display the table using Streamlit's built-in table function
+    st.table(pitcher_df)
+
+    # Create PNG output for hitting and pitching lineups combined
+    img_hitter = dataframe_to_image(hitter_df, f"{team_name} - Hitting Lineup")
+    img_pitcher = dataframe_to_image(pitcher_df, f"{team_name} - Pitching Rotation")
+    
+    # Combine both images into one
+    total_height = img_hitter.height + img_pitcher.height
+    combined_img = Image.new('RGB', (img_hitter.width, total_height), color=(255, 255, 255))
+    combined_img.paste(img_hitter, (0, 0))
+    combined_img.paste(img_pitcher, (0, img_hitter.height))
+    
+    # Save the combined image as PNG
+    img_bytes = save_image(combined_img)
+
+    # Provide download button for the combined PNG
+    st.download_button(
+        label="Download Combined Lineup as PNG",
+        data=img_bytes,
+        file_name=f"{team_name}_combined_lineup.png" if team_name else "combined_lineup.png",
+        mime="image/png"
+    )
