@@ -4,6 +4,31 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
+# Set page configuration for wider layout
+st.set_page_config(layout="wide")  # Ensures the app uses the entire width of the page
+
+# Inject custom CSS to handle responsiveness
+st.markdown("""
+    <style>
+    /* Custom CSS to make the layout responsive */
+    @media screen and (max-width: 600px) {
+        .streamlit-expanderHeader {
+            font-size: 14px;
+        }
+        .block-container {
+            padding-left: 0rem !important;
+            padding-right: 0rem !important;
+        }
+        .css-1aumxhk {
+            max-width: 100% !important;
+        }
+    }
+    .css-1aumxhk {
+        max-width: 1200px !important;  /* Max width for large screens */
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Use @st.cache_data to efficiently cache the CSV file loading
 @st.cache_data
 def load_data(file_path):
@@ -170,12 +195,12 @@ for i in range(1, 10):
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
-# Create input fields for pitchers, all starting as blank (empty string)
+# Similarly, for pitchers, layout follows the same logic:
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
-    # Custom colored header for pitching lineup (green)
-    st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
+    # Custom colored header for pitching lineup (light blue)
+    st.markdown(f"<h4 style='color: lightblue;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
     # Create 3 columns for player, year, and position
     col1, col2, col3 = st.columns([2, 1, 1])  # Player name takes 2 parts of the width
@@ -192,7 +217,7 @@ for i in range(1, 6):
         else:
             season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
     
-    # Select Role for Pitcher
+    # Select Position for Pitcher
     with col3:
         position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
