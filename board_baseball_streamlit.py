@@ -123,7 +123,7 @@ for i in range(1, 10):
     
     # Player selection for hitting
     with col1:
-        player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
+        player = st.selectbox(f"Player", [" "] + hitters_names, key=f"hitter_{i}_player")
     
     # Year selection for hitting
     with col2:
@@ -151,7 +151,7 @@ for i in range(1, 6):
     
     # Player selection for pitching
     with col1:
-        player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+        player = st.selectbox(f"Player", [" "] + pitchers_names, key=f"pitcher_{i}_player")
     
     # Year selection for pitching
     with col2:
