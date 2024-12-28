@@ -12,13 +12,13 @@ st.markdown("""
     <style>
     /* Custom CSS to narrow down the app's layout to fit mobile screens better */
     .block-container {
-        max-width: 400px !important;  /* Set max width for mobile view */
+        max-width: 350px !important;  /* Set max width for mobile view */
         padding-left: 1rem !important;
         padding-right: 1rem !important;
     }
     
     /* Style for mobile headers */
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 350px) {
         .css-1aumxhk {
             max-width: 100% !important;
         }
