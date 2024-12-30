@@ -144,9 +144,9 @@ st.markdown("""
         }
         .center-title {
             text-align: center;
-            font-size: 32px;
+            font-size: 36px;
             color: #B3AEC2; /* Orange color for the title */
-            text-shadow: 2px 2px 4px rgba(143, 192, 235, 1);
+            text-shadow: 2px 2px 4px rgba(143, 192, 235, .5);
         }
         .stButton>button {
             background: linear-gradient(145deg, #28A745, #34D058); /* Green gradient */
