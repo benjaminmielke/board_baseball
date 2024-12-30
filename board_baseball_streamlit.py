@@ -4,8 +4,8 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-# Use @st.cache_data to efficiently cache the CSV file loading
-@st.cache_data
+# Load the CSV file based on input type (hitters or pitchers)
+@st.cache
 def load_data(file_path):
     return pd.read_csv(file_path)
 
@@ -84,7 +84,10 @@ def dataframe_to_image(df, header_text):
     draw = ImageDraw.Draw(img)
     
     # Load font (default font in case the system does not have arial)
-    font = ImageFont.load_default()
+    #try:
+    font = ImageFont.truetype("Exo2-VariableFont_wght.ttf", 20)
+   # except IOError:
+   #     font = ImageFont.load_default()
     
     # Define column names and column widths
     columns = df.columns
@@ -121,7 +124,7 @@ def save_image(img):
     return img_bytes
 
 # App starts here
-st.title("Board Baseball Lineup Created")
+st.title("Board Baseball")  # Updated title
 
 # Add an input field for the team name, starting with an empty string
 team_name = st.text_input("Enter your Team Name", "")
