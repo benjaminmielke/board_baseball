@@ -121,9 +121,9 @@ def save_image(img):
     return img_bytes
 
 # App starts here
-st.set_page_config(page_title="Board Baseball", page_icon="⚾", layout="wide")
+st.set_page_config(page_title="Board Baseball 🎲", page_icon="⚾", layout="wide")
 
-# Custom CSS for baseball theme
+# Custom CSS for baseball theme and button styling
 st.markdown("""
     <style>
         body {
@@ -141,17 +141,20 @@ st.markdown("""
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
         .stButton>button {
-            background-color: #1E40AF; /* Blue Button Color */
+            background: linear-gradient(145deg, #1E40AF, #3B82F6);
             color: white;
             border: 2px solid #fff;
             padding: 12px 24px;
             font-size: 18px;
             cursor: pointer;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.2);
+            transition: 0.3s ease-in-out;
         }
         .stButton>button:hover {
-            background-color: #3B82F6; /* Lighter Blue Hover Color */
+            background: linear-gradient(145deg, #3B82F6, #1E40AF);
+            transform: translateY(-2px);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
         }
         .stSelectbox>div>div>div>input, .stTextInput>div>div>input {
             background-color: rgba(255, 255, 255, 0.8);
@@ -186,7 +189,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Title
-st.title("⚾ Board Baseball ⚾")
+st.title("⚾ Board Baseball 🎲")
 
 # Add an input field for the team name
 team_name = st.text_input("Enter your Team Name", "")
@@ -202,17 +205,14 @@ pitchers_data = load_data(pitchers_file)
 # Extract player names and seasons for the dropdowns
 hitters_names = sorted(hitters_data['Name'].unique())
 pitchers_names = sorted(pitchers_data['Name'].unique())
-
-# Positions for hitters and pitchers
-positions_hitter = ['1B', '2B', '3B', 'SS', 'C', 'LF', 'CF', 'RF', 'DH']
+positions_hitter = ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH']
 positions_pitcher = ['SP', 'RP']
 
-# Create input fields for hitters
+# Hitting lineup section
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    st.markdown(f"<h4 style='color: #d62828;'>Hitter {i}</h4>", unsafe_allow_html=True)
-    
+    st.markdown(f"<h4 style='color: #1E40AF;'>Hitter {i}</h4>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
     with col1:
@@ -230,13 +230,12 @@ for i in range(1, 10):
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
-# Create input fields for pitchers
+# Pitching rotation section
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
-    st.markdown(f"<h4 style='color: #1E40AF;'>Pitcher {i}</h4>", unsafe_allow_html=True)  # Changed to blue
-    
-    col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
+    st.markdown(f"<h4 style='color: #1E40AF;'>Pitcher {i}</h4>", unsafe_allow_html=True)  # Blue for pitchers
+    col1, col2, col3 = st.columns([3, 1, 1])
 
     with col1:
         player = st.selectbox(f"Player Name", [" "] + pitchers_names, key=f"pitcher_{i}_player")
@@ -253,7 +252,7 @@ for i in range(1, 6):
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
-# Button to generate the lineup
+# Button to generate lineup
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
