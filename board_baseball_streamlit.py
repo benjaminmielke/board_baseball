@@ -141,7 +141,7 @@ st.markdown("""
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
         .stButton>button {
-            background-color: #d62828;
+            background-color: #1E40AF; /* Blue Button Color */
             color: white;
             border: 2px solid #fff;
             padding: 12px 24px;
@@ -151,7 +151,7 @@ st.markdown("""
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
         .stButton>button:hover {
-            background-color: #ff6f61;
+            background-color: #3B82F6; /* Lighter Blue Hover Color */
         }
         .stSelectbox>div>div>div>input, .stTextInput>div>div>input {
             background-color: rgba(255, 255, 255, 0.8);
@@ -178,6 +178,9 @@ st.markdown("""
         }
         .stTable td {
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .stHeader {
+            color: #1E40AF; /* Blue Header Color for Pitchers */
         }
     </style>
 """, unsafe_allow_html=True)
@@ -231,7 +234,7 @@ for i in range(1, 10):
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
-    st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color: #1E40AF;'>Pitcher {i}</h4>", unsafe_allow_html=True)  # Changed to blue
     
     col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
