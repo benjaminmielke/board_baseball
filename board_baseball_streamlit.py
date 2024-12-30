@@ -157,19 +157,19 @@ for i in range(1, 10):
 
     # Select Player for Hitter
     with col1:
-        player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
+        player = st.selectbox(f"Player Name", [" "] + hitters_names, key=f"hitter_{i}_player")
     
     # Dynamically filter available years for selected player
     with col2:
         if player:
             available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
-            season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
+            season = st.selectbox(f"Year", [" "] + available_years, key=f"hitter_{i}_season")
         else:
-            season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
+            season = st.selectbox(f"Year", [" "], key=f"hitter_{i}_season")
     
     # Select Position for Hitter
     with col3:
-        position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
+        position = st.selectbox(f"Position", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -185,19 +185,19 @@ for i in range(1, 6):
 
     # Select Player for Pitcher
     with col1:
-        player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+        player = st.selectbox(f"Player Name}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
     
     # Dynamically filter available years for selected player
     with col2:
         if player:
             available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
-            season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
+            season = st.selectbox(f"Year", [" "] + available_years, key=f"pitcher_{i}_season")
         else:
-            season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
+            season = st.selectbox(f"Year", [" "], key=f"pitcher_{i}_season")
     
     # Select Position for Pitcher
     with col3:
-        position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
+        position = st.selectbox(f"Position", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
