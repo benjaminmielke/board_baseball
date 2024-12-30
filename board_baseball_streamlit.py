@@ -126,7 +126,7 @@ st.set_page_config(page_title="Board Baseball 🎲", page_icon="⚾", layout="wi
 # Custom CSS for baseball theme and button styling
 st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Squada+One&display=swap');
         
         body {
             background-image: url('https://cdn.pixabay.com/photo/2021/07/09/07/47/baseball-6402182_960_720.jpg');
