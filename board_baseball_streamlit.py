@@ -152,17 +152,24 @@ for i in range(1, 10):
     # Custom colored header for hitting lineup (yellow)
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
+    # Create 3 columns for Player, Year, Position
+    col1, col2, col3 = st.columns([3, 2, 2])  # Player selector takes more space
+
     # Select Player for Hitter
-    player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
+    with col1:
+        player = st.selectbox(f"Select Player for Hitter {i}", [" "] + hitters_names, key=f"hitter_{i}_player")
     
     # Dynamically filter available years for selected player
-    if player:
-        available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
-        season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
-    else:
-        season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
+    with col2:
+        if player:
+            available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
+            season = st.selectbox(f"Select Year for Hitter {i}", [" "] + available_years, key=f"hitter_{i}_season")
+        else:
+            season = st.selectbox(f"Select Year for Hitter {i}", [" "], key=f"hitter_{i}_season")
     
-    position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
+    # Select Position for Hitter
+    with col3:
+        position = st.selectbox(f"Select Position for Hitter {i}", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
@@ -173,17 +180,24 @@ for i in range(1, 6):
     # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
+    # Create 3 columns for Player, Year, Position
+    col1, col2, col3 = st.columns([3, 2, 2])  # Player selector takes more space
+
     # Select Player for Pitcher
-    player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+    with col1:
+        player = st.selectbox(f"Select Player for Pitcher {i}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
     
     # Dynamically filter available years for selected player
-    if player:
-        available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
-        season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
-    else:
-        season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
+    with col2:
+        if player:
+            available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
+            season = st.selectbox(f"Select Year for Pitcher {i}", [" "] + available_years, key=f"pitcher_{i}_season")
+        else:
+            season = st.selectbox(f"Select Year for Pitcher {i}", [" "], key=f"pitcher_{i}_season")
     
-    position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
+    # Select Position for Pitcher
+    with col3:
+        position = st.selectbox(f"Select Role for Pitcher {i}", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
     pitching_lineup.append({"Player": player, "Year": season, "Position": position})
 
