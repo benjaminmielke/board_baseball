@@ -126,11 +126,13 @@ st.set_page_config(page_title="Board Baseball 🎲", page_icon="⚾", layout="wi
 # Custom CSS for baseball theme and button styling
 st.markdown("""
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
         body {
             background-image: url('https://cdn.pixabay.com/photo/2021/07/09/07/47/baseball-6402182_960_720.jpg');
             background-size: cover;
             color: white;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Press Start 2P', cursive;
             background-position: center center;
             background-attachment: fixed;
             padding: 0;
