@@ -129,7 +129,7 @@ st.markdown("""
         @import url('https://fonts.googleapis.com/css2?family=Squada+One&display=swap');
         
         body {
-            background-image: url('https://cdn.pixabay.com/photo/2021/07/09/07/47/baseball-6402182_960_720.jpg');
+            background-image: url('https://img.freepik.com/free-vector/gradient-softball-background_23-2150742153.jpg?t=st=1735539120~exp=1735542720~hmac=e24bf4551403779e714d3c1d3a34c1a42bd0b845934e580b6d3fe7ac0a88025a&w=2000);
             background-size: cover;
             color: white;
             font-family: 'Press Start 2P', cursive;
