@@ -185,7 +185,7 @@ for i in range(1, 6):
 
     # Select Player for Pitcher
     with col1:
-        player = st.selectbox(f"Player Name}", [" "] + pitchers_names, key=f"pitcher_{i}_player")
+        player = st.selectbox(f"Player Name", [" "] + pitchers_names, key=f"pitcher_{i}_player")
     
     # Dynamically filter available years for selected player
     with col2:
