@@ -84,10 +84,7 @@ def dataframe_to_image(df, header_text):
     draw = ImageDraw.Draw(img)
     
     # Load font (default font in case the system does not have arial)
-    #try:
-    font = ImageFont.truetype("Exo2-VariableFont_wght.ttf", 20)
-   # except IOError:
-   #     font = ImageFont.load_default()
+    font = ImageFont.load_default()
     
     # Define column names and column widths
     columns = df.columns
@@ -124,9 +121,64 @@ def save_image(img):
     return img_bytes
 
 # App starts here
-st.title("Board Baseball")  # Updated title
+st.set_page_config(page_title="Board Baseball", page_icon="⚾", layout="wide")
 
-# Add an input field for the team name, starting with an empty string
+# Custom CSS for baseball theme
+st.markdown("""
+    <style>
+        body {
+            background-image: url('https://www.hdwallpapers.in/download/baseball_field_grass_sports_field-2560x1600.jpg');
+            background-size: cover;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .stButton>button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .stButton>button:hover {
+            background-color: #0056b3;
+        }
+        .stSelectbox>div>div>div>input {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            padding: 8px;
+        }
+        .stTextInput>div>div>input {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 5px;
+            padding: 8px;
+        }
+        .stTable {
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #ffffff;
+            margin-top: 20px;
+        }
+        .stTable th {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .stTable td {
+            text-align: center;
+        }
+        .stTable th, .stTable td {
+            padding: 12px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Title
+st.title("⚾ Board Baseball ⚾")
+
+# Add an input field for the team name
 team_name = st.text_input("Enter your Team Name", "")
 
 # File paths for hitter and pitcher stats
@@ -138,28 +190,25 @@ hitters_data = load_data(hitters_file)
 pitchers_data = load_data(pitchers_file)
 
 # Extract player names and seasons for the dropdowns
-hitters_names = sorted(hitters_data['Name'].unique())  # Updated column name
-pitchers_names = sorted(pitchers_data['Name'].unique())  # Updated column name
+hitters_names = sorted(hitters_data['Name'].unique())
+pitchers_names = sorted(pitchers_data['Name'].unique())
 
 # Positions for hitters and pitchers
 positions_hitter = ['1B', '2B', '3B', 'SS', 'C', 'LF', 'CF', 'RF', 'DH']
 positions_pitcher = ['SP', 'RP', 'CL']
 
-# Create input fields for hitters, all starting as blank (empty string)
+# Create input fields for hitters
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    # Custom colored header for hitting lineup (yellow)
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
     # Create 3 columns for Player, Year, Position
     col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
-    # Select Player for Hitter
     with col1:
         player = st.selectbox(f"Player Name", [" "] + hitters_names, key=f"hitter_{i}_player")
     
-    # Dynamically filter available years for selected player
     with col2:
         if player:
             available_years = sorted(hitters_data[hitters_data['Name'] == player]['Year'].unique())
@@ -167,27 +216,22 @@ for i in range(1, 10):
         else:
             season = st.selectbox(f"Year", [" "], key=f"hitter_{i}_season")
     
-    # Select Position for Hitter
     with col3:
         position = st.selectbox(f"Position", [" "] + positions_hitter, key=f"hitter_{i}_position")
     
     hitting_lineup.append({"Player": player, "Year": season, "Position": position})
 
-# Create input fields for pitchers, all starting as blank (empty string)
+# Create input fields for pitchers
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
-    # Custom colored header for pitching lineup (green)
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
-    # Create 3 columns for Player, Year, Position
     col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
-    # Select Player for Pitcher
     with col1:
         player = st.selectbox(f"Player Name", [" "] + pitchers_names, key=f"pitcher_{i}_player")
     
-    # Dynamically filter available years for selected player
     with col2:
         if player:
             available_years = sorted(pitchers_data[pitchers_data['Name'] == player]['Year'].unique())
@@ -195,7 +239,6 @@ for i in range(1, 6):
         else:
             season = st.selectbox(f"Year", [" "], key=f"pitcher_{i}_season")
     
-    # Select Position for Pitcher
     with col3:
         position = st.selectbox(f"Position", [" "] + positions_pitcher, key=f"pitcher_{i}_position")
     
@@ -205,13 +248,11 @@ for i in range(1, 6):
 if st.button("Generate Lineup"):
     st.subheader("Your Lineup")
 
-    # Display team name if provided
     if team_name:
         st.write(f"### Team: {team_name}")
     else:
         st.write("### Team: [No team name provided]")
 
-    # Display hitting lineup in a simple table format
     st.write("### Hitting Lineup")
     hitter_stats = []
     for i, hitter in enumerate(hitting_lineup, 1):
@@ -257,11 +298,8 @@ if st.button("Generate Lineup"):
             hitter_stats.append(stats)
 
     hitter_df = pd.DataFrame(hitter_stats)
-
-    # Display the table using Streamlit's built-in table function
     st.table(hitter_df)
 
-    # Display pitching lineup in a simple table format
     st.write("### Pitching Rotation")
     pitcher_stats = []
     for i, pitcher in enumerate(pitching_lineup, 1):
@@ -305,8 +343,6 @@ if st.button("Generate Lineup"):
             pitcher_stats.append(stats)
 
     pitcher_df = pd.DataFrame(pitcher_stats)
-
-    # Display the table using Streamlit's built-in table function
     st.table(pitcher_df)
 
     # Create PNG output for hitting and pitching lineups combined
