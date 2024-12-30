@@ -76,7 +76,7 @@ def calculate_pitcher_metrics(pitcher_name, pitcher_position, pitcher_year, ERA,
 # Function to convert dataframe to image with larger text
 def dataframe_to_image(df, header_text):
     # Create a white canvas
-    img_width = 1300
+    img_width = 1400
     img_height = 80 + len(df) * 60  # Height adjusts based on the number of rows and larger font
     img = Image.new('RGB', (img_width, img_height), color=(255, 255, 255))
     
