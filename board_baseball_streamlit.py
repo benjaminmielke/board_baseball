@@ -141,7 +141,7 @@ st.markdown("""
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
         .stButton>button {
-            background: linear-gradient(145deg, #1E40AF, #3B82F6);
+            background: linear-gradient(145deg, #28A745, #34D058); /* Green gradient */
             color: white;
             border: 2px solid #fff;
             padding: 12px 24px;
@@ -152,7 +152,7 @@ st.markdown("""
             transition: 0.3s ease-in-out;
         }
         .stButton>button:hover {
-            background: linear-gradient(145deg, #3B82F6, #1E40AF);
+            background: linear-gradient(145deg, #34D058, #28A745); /* Inverted green gradient */
             transform: translateY(-2px);
             box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
         }
