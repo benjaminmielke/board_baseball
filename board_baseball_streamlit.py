@@ -129,7 +129,7 @@ st.markdown("""
         @import url('https://fonts.googleapis.com/css2?family=Squada+One&display=swap');
         
         body {
-            background-image: url('https://img.freepik.com/free-vector/gradient-softball-background_23-2150742153.jpg);
+            background-image: url('https://img.freepik.com/free-vector/gradient-softball-background_23-2150742153.jpg');
             background-size: cover;
             color: white;
             font-family: 'Squada One';
@@ -140,6 +140,12 @@ st.markdown("""
         }
         h1, h2, h3, h4 {
             font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+        .center-title {
+            text-align: center;
+            font-size: 48px;
+            color: #FF4500; /* Orange color for the title */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
         .stButton>button {
@@ -190,8 +196,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Title
-st.title("⚾ Board Baseball 🎲")
+# Title with custom CSS for centering
+st.markdown('<h1 class="center-title">⚾ Board Baseball 🎲</h1>', unsafe_allow_html=True)
 
 # Add an input field for the team name
 team_name = st.text_input("Enter your Team Name", "")
