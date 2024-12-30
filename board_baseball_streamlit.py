@@ -127,50 +127,57 @@ st.set_page_config(page_title="Board Baseball", page_icon="⚾", layout="wide")
 st.markdown("""
     <style>
         body {
-            background-image: url('https://www.hdwallpapers.in/download/baseball_field_grass_sports_field-2560x1600.jpg');
+            background-image: url('https://cdn.pixabay.com/photo/2021/07/09/07/47/baseball-6402182_960_720.jpg');
             background-size: cover;
             color: white;
             font-family: 'Arial', sans-serif;
+            background-position: center center;
+            background-attachment: fixed;
+            padding: 0;
+            margin: 0;
         }
         h1, h2, h3, h4 {
             font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
         .stButton>button {
-            background-color: #007BFF;
+            background-color: #d62828;
             color: white;
-            border: none;
+            border: 2px solid #fff;
             padding: 12px 24px;
             font-size: 18px;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 5px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
         .stButton>button:hover {
-            background-color: #0056b3;
+            background-color: #ff6f61;
         }
-        .stSelectbox>div>div>div>input {
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 5px;
-            padding: 8px;
-        }
-        .stTextInput>div>div>input {
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 5px;
-            padding: 8px;
+        .stSelectbox>div>div>div>input, .stTextInput>div>div>input {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 10px;
         }
         .stTable {
             font-family: 'Courier New', Courier, monospace;
-            border: 1px solid #ffffff;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid white;
             margin-top: 20px;
+            border-radius: 10px;
         }
         .stTable th {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: yellow;
         }
         .stTable td {
             text-align: center;
+            color: white;
         }
         .stTable th, .stTable td {
-            padding: 12px;
+            padding: 15px;
+        }
+        .stTable td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 """, unsafe_allow_html=True)
@@ -195,15 +202,14 @@ pitchers_names = sorted(pitchers_data['Name'].unique())
 
 # Positions for hitters and pitchers
 positions_hitter = ['1B', '2B', '3B', 'SS', 'C', 'LF', 'CF', 'RF', 'DH']
-positions_pitcher = ['SP', 'RP', 'CL']
+positions_pitcher = ['SP', 'RP']
 
 # Create input fields for hitters
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color: #d62828;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
-    # Create 3 columns for Player, Year, Position
     col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
     with col1:
