@@ -153,7 +153,7 @@ for i in range(1, 10):
     st.markdown(f"<h4 style='color: yellow;'>Hitter {i}</h4>", unsafe_allow_html=True)
     
     # Create 3 columns for Player, Year, Position
-    col1, col2, col3 = st.columns([3, .25, .25])  # Player selector takes more space
+    col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
     # Select Player for Hitter
     with col1:
@@ -181,7 +181,7 @@ for i in range(1, 6):
     st.markdown(f"<h4 style='color: green;'>Pitcher {i}</h4>", unsafe_allow_html=True)
     
     # Create 3 columns for Player, Year, Position
-    col1, col2, col3 = st.columns([3, .25, .25])  # Player selector takes more space
+    col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
     # Select Player for Pitcher
     with col1:
