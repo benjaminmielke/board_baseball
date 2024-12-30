@@ -212,7 +212,7 @@ positions_pitcher = ['SP', 'RP']
 st.header("Hitting Lineup")
 hitting_lineup = []
 for i in range(1, 10):
-    st.markdown(f"<h4 style='color: #1E40AF;'>Hitter {i}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='color: #FF001D;'>Hitter {i}</h4>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([3, 1, 1])  # Player selector takes more space
 
     with col1:
@@ -234,7 +234,7 @@ for i in range(1, 10):
 st.header("Pitching Rotation")
 pitching_lineup = []
 for i in range(1, 6):
-    st.markdown(f"<h4 style='color: #1E40AF;'>Pitcher {i}</h4>", unsafe_allow_html=True)  # Blue for pitchers
+    st.markdown(f"<h4 style='color: #0080FF;'>Pitcher {i}</h4>", unsafe_allow_html=True)  # Blue for pitchers
     col1, col2, col3 = st.columns([3, 1, 1])
 
     with col1:
